@@ -1,0 +1,25 @@
+{
+    "preload": {
+        "files": [
+            {
+                "type": "image",
+                "key": "mainmenu-bg",
+                "url": "assets/images/image.png"
+            },
+            {
+                "type": "spritesheet",
+                "key": "hero",
+                "url": "assets/images/spritesheet.png",
+                "frameConfig": {
+                    "frameWidth": 32,
+                    "frameHeight": 32
+                }
+            },
+            {
+                "type": "audio",
+                "key": "music",
+                "url": "assets/sounds/audio.mp3"
+            }
+        ]
+    }
+}
