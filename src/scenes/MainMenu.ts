@@ -49,7 +49,7 @@ export class MainMenu extends Phaser.Scene {
             //this.scene.start('GameScene');
         });
 
-        this.scene.start('GameScene');
+        this.scene.start('MapBuilder');
     }
 
     update() {
