@@ -27,13 +27,17 @@ export class GameScene extends Phaser.Scene {
 
     private p1: Phaser.Physics.Arcade.Image;
     private p2: Phaser.Physics.Arcade.Image;
-
+    
     private arePlayersJoined: Boolean = false;
 
     // The player that is leading the other. null if they are separated
     private leader: Phaser.Physics.Arcade.Image;
 
     private playerToKeys: Map<Phaser.Physics.Arcade.Image, Object> = new Map();
+
+    private wallGroup: Phaser.Physics.Arcade.StaticGroup;
+
+    private tileGroup: Phaser.GameObjects.Group;
 
     constructor() {
         super({
@@ -65,12 +69,90 @@ export class GameScene extends Phaser.Scene {
         });
     }
 
+    processCallback (pig:Phaser.Physics.Arcade.Image, ring:Phaser.Physics.Arcade.Image): boolean {
+        if (pig.y > ring.getCenter().y)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    createWall(props: any) {
+        let wall = this.wallGroup.create(props.x, props.y, props.i) as Phaser.Physics.Arcade.Image;
+        wall.setRotation(props.r || 0);
+        wall.setOrigin(0);
+        wall.setDisplaySize(props.w, props.h);
+        wall.refreshBody();
+        return wall;
+    }
+
+    loadWalls() {
+        let wallsConfig = this.cache.json.get('walls');
+        wallsConfig.forEach(wall => this.createWall(wall));
+    }
+
+    createTileWall(x, y, horizontal=false) {
+        let wall = this.physics.add.staticImage(x, y, 'red-square');
+        wall.setDisplaySize(!horizontal ? 5 : 100, !horizontal ? 100 : 5);
+        wall.refreshBody();
+        this.wallGroup.add(wall);
+    }
+
+    layTile(tileConfig, x, y) {
+        if (!tileConfig.i)
+            return null;
+        let tile: Phaser.GameObjects.Image = this.tileGroup.create(x, y, tileConfig.i);
+
+        // handle collision here too?
+        if (tileConfig.b) {
+            if (tileConfig.b.includes('l')){
+                this.createTileWall(x-47, y)
+            }
+            if (tileConfig.b.includes('t')){
+                this.createTileWall(x, y-47, true)
+            }
+            if (tileConfig.b.includes('r')){
+                this.createTileWall(x+47, y)
+            }
+            if (tileConfig.b.includes('b')){
+                this.createTileWall(x, y+47, true)
+            }
+        }
+
+        tile.setRotation(tileConfig.r * Math.PI/2 || 0);
+        return tile;
+    }
+
+    layTileRow(row: Array<any>, rowIndex) {
+        row.map((tileConfig, tileIndex) => this.layTile(tileConfig, (tileIndex * 100) + 50, (rowIndex * 100) + 50));
+    }
+
+    loadTiles() {
+        this.tileGroup = this.add.group();
+        let tilesConfig = this.cache.json.get('tiles');
+        tilesConfig.map((row, rowIndex) => this.layTileRow(row, rowIndex));
+    }
+
     create(): void {
         // Create the background and main scene
         // this.add.sprite(0, 0, 'background').setOrigin(0, 0);
 
+        this.wallGroup = this.physics.add.staticGroup();
+        this.loadTiles();
+        this.loadWalls();
+
         this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
+        this.p1.setDisplaySize(75,75);
+
         this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
+        this.p2.setDisplaySize(75,75);
+
+
+        this.physics.add.collider(this.p1, this.wallGroup);
+        this.physics.add.collider(this.p2, this.wallGroup);
+        this.wallGroup.toggleVisible();
+
+
 
         // Map the players to the keys so we can loop over the players later and lookup which keybindings they have
         this.playerToKeys.set(this.p1, this.p1Keys);
