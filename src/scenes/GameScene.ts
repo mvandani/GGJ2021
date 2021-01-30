@@ -14,6 +14,11 @@ enum Controls {
     RIGHT
 };
 
+enum EnemyTypes {
+    DUMB_DANGER_NOODLE,
+    SMART_SNEK,
+}
+
 const followerOffset = {
     x: 10,
     y: -10
@@ -43,6 +48,71 @@ export class GameScene extends Phaser.Scene {
     private wallGroup: Phaser.Physics.Arcade.StaticGroup;
 
     private tileGroup: Phaser.GameObjects.Group;
+
+    private enemies: Array<Phaser.Physics.Arcade.Image> = [];
+
+    // A map of enemy Images to enemyDefinitions (see below)
+    private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
+
+    // A lookup of enemy type enums to objects defining a type of enemy, which includes:
+    // - Its asset type for this.physics.add.image
+    // - Its update function, which is called each frame
+    private enemyDefinitions: Object = {
+        [EnemyTypes.DUMB_DANGER_NOODLE]: {
+            assetType: "snake-01",
+            update: (e: Phaser.Physics.Arcade.Image) => {
+                // Anytime a dumb danger noodle cannot move in any direction or if it reaches
+                // a location divisible by 50, it chooses a new direction to move in randomly.
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                    const rando = Math.random();
+                    if(rando < .25) {
+                        e.setVelocityX(-300);
+                        e.setVelocityY(0);
+                    } else if(rando < .5) {
+                        e.setVelocityX(300);
+                        e.setVelocityY(0);
+                    } else if(rando < .75) {
+                        e.setVelocityX(0);
+                        e.setVelocityY(-300);
+                    } else {
+                        e.setVelocityX(0);
+                        e.setVelocityY(300);
+                    }
+                }
+            }
+        },
+        [EnemyTypes.SMART_SNEK]: {
+            assetType: "snake-02",
+            update: (e: Phaser.Physics.Arcade.Image) => {
+                // Smart sneks move toward p1 in either the x or y dimension (randomly decided) if they
+                // cannot move any further in their current direction or if they reach a location divisble
+                // by 50.
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                    if(Math.random() > .5) {
+                        e.setVelocityY(0);
+                        const dx = e.x - this.p1.x;
+                        if(dx < 0) {
+                            e.setVelocityX(300);
+                        } else if(dx > 0) {
+                            e.setVelocityX(-300);
+                        } else {
+                            e.setVelocityX(0);
+                        }
+                    } else {
+                        e.setVelocityX(0);
+                        const dy = e.y - this.p1.y;
+                        if(dy < 0) {
+                            e.setVelocityY(300);
+                        } else if(dy > 0) {
+                            e.setVelocityY(-300);
+                        } else {
+                            e.setVelocityY(0);
+                        }
+                    }
+                }
+            }
+        }
+    };
 
     constructor() {
         super({
@@ -156,15 +226,14 @@ export class GameScene extends Phaser.Scene {
         this.physics.add.collider(this.p2, this.wallGroup);
         this.wallGroup.toggleVisible();
 
-
-
         // Map the players to the keys so we can loop over the players later and lookup which keybindings they have
         this.playerToKeys.set(this.p1, this.p1Keys);
         this.playerToKeys.set(this.p2, this.p2Keys);
 
         [this.p1, this.p2].forEach(p => p.setCollideWorldBounds(true));
 
-
+        this.createEnemies();
+        
         // Listen for events from obejcts
         this.events.addListener('event', () => {
             // noop
@@ -234,10 +303,45 @@ export class GameScene extends Phaser.Scene {
 
             this.arePlayersJoined = false;
             this.leader = null;
+
+            // Allow physics collisions for everyone
             this.p1.body.immovable = false;
             this.p2.body.immovable = false;
         });
+    }
 
+    createEnemies(): void {
+        const enemyTypes = [
+            EnemyTypes.DUMB_DANGER_NOODLE,
+            EnemyTypes.DUMB_DANGER_NOODLE,
+            EnemyTypes.DUMB_DANGER_NOODLE,
+            EnemyTypes.SMART_SNEK,
+            EnemyTypes.SMART_SNEK,
+        ];
+
+        enemyTypes.forEach(enemyType => {
+            // Get the definition for this type of enemy
+            const eDefinition = this.enemyDefinitions[enemyType];
+
+            const e = this.physics.add.image(0,0, eDefinition.assetType);
+            e.setDisplaySize(50,50);
+            e.setCollideWorldBounds(true);
+            this.physics.add.collider(e, this.wallGroup);
+            this.enemies.push(e);
+
+            // Pair the enemy object with its definition
+            this.enemiesToDefintions.set(e, eDefinition);
+        });
+    }
+
+    updateEnemies(): void {
+        this.enemies.forEach(e => {
+            // Lookup the definition for this enemy...
+            const eDefinition = this.enemiesToDefintions.get(e);
+
+            // ... and call its update function
+            eDefinition.update(e);
+        });
     }
 
     // If the players are joined, return true if the arg key is pressed for either player.
@@ -300,6 +404,8 @@ export class GameScene extends Phaser.Scene {
             this.p2.setDepth(100);
             this.p1.setDepth(101);
         }
+
+        this.updateEnemies();
     }
 
     private runGame() {

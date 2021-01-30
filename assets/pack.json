@@ -19,6 +19,17 @@
 
             {
                 "type": "image",
+                "key": "snake-01",
+                "url": "assets/images/snake-01.png"
+            },
+            {
+                "type": "image",
+                "key": "snake-02",
+                "url": "assets/images/snake-02.png"
+            },
+
+            {
+                "type": "image",
                 "key": "vl1",
                 "url": "assets/images/verticalleft1.png"
             },{
