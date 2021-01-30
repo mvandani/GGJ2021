@@ -25,10 +25,13 @@ export class GameScene extends Phaser.Scene {
     private p2Keys: Object;
     private allowKeyInput: Boolean = true;
 
-    private arePlayersJoined: Boolean = false;
-
     private p1: Phaser.Physics.Arcade.Image;
     private p2: Phaser.Physics.Arcade.Image;
+
+    private arePlayersJoined: Boolean = false;
+
+    // The player that is leading the other. null if they are separated
+    private leader: Phaser.Physics.Arcade.Image;
 
     private playerToKeys: Map<Phaser.Physics.Arcade.Image, Object> = new Map();
 
@@ -95,21 +98,44 @@ export class GameScene extends Phaser.Scene {
                 summonee = this.p1;
                 summoner = this.p2;
             }
-            
-            this.allowKeyInput = false;
-            this.arePlayersJoined = true;
 
-            summonee.setDepth(100);
-            summoner.setDepth(101);
-            this.tweens.add({
-                targets: summonee,
-                x: summoner.x + 20,
-                y: summoner.y + 20,
-                duration: 500,
-                onComplete: () => {
-                    this.allowKeyInput = true;
-                }
-            });
+            // If the summoner is already the leader there is nothing to do.
+            if(summoner === this.leader) {
+                return;
+            }
+
+            this.leader = summoner;
+            this.allowKeyInput = false;
+            
+            // If the players are joined, swap their positions
+            if(this.arePlayersJoined) {
+                this.tweens.add({
+                    targets: summoner,
+                    x: summonee.x,
+                    y: summonee.y,
+                    duration: 500,
+                });
+                this.tweens.add({
+                    targets: summonee,
+                    x: summoner.x,
+                    y: summoner.y,
+                    duration: 500,
+                    onComplete: () => {
+                        this.allowKeyInput = true;
+                    }
+                });
+            } else { // If the players are separeted moved the summonee behind the summoner
+                this.tweens.add({
+                    targets: summonee,
+                    x: summoner.x + 20,
+                    y: summoner.y - 20,
+                    duration: 500,
+                    onComplete: () => {
+                        this.allowKeyInput = true;
+                    }
+                });
+                this.arePlayersJoined = true;
+            }
         });
 
         this.input.keyboard.addListener('keydown-SPACE', event => {
@@ -118,6 +144,7 @@ export class GameScene extends Phaser.Scene {
             }
 
             this.arePlayersJoined = false;
+            this.leader = null;
         });
 
     }
@@ -160,6 +187,15 @@ export class GameScene extends Phaser.Scene {
                 }
             }
         });
+
+        // The player closer to the bottom of the screen is drawn in front of the other
+        if(this.p1.y < this.p2.y) {
+            this.p1.setDepth(100);
+            this.p2.setDepth(101);
+        } else {
+            this.p2.setDepth(100);
+            this.p1.setDepth(101);
+        }
     }
 
     private runGame() {
