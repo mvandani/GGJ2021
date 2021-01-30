@@ -15,6 +15,46 @@
                 "type": "image",
                 "key": "blue-circle",
                 "url": "assets/images/blue-circle.png"
+            },
+            {
+                "type": "image",
+                "key": "red-square",
+                "url": "assets/images/red-square.png"
+            },
+
+            {
+                "type": "image",
+                "key": "vl1",
+                "url": "assets/images/verticalleft1.png"
+            },{
+                "type": "image",
+                "key": "vl2",
+                "url": "assets/images/verticalleft2.png"
+            },
+            {
+                "type": "image",
+                "key": "vs",
+                "url": "assets/images/verticalsingle.png"
+            },
+            {
+                "type": "image",
+                "key": "vr1",
+                "url": "assets/images/verticalright1.png"
+            },
+            {
+                "type": "image",
+                "key": "vr2",
+                "url": "assets/images/verticalright2.png"
+            },
+            {
+                "type": "image",
+                "key": "nw1",
+                "url": "assets/images/nowalls1.png"
+            },
+            {
+                "type": "image",
+                "key": "nw2",
+                "url": "assets/images/nowalls2.png"
             }
         ]
     }
