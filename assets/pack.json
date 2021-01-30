@@ -1,6 +1,21 @@
 {
     "preload": {
         "files": [
+            {
+                "type": "image",
+                "key": "mr-giggy",
+                "url": "assets/images/mr-giggy.png"
+            },
+            {
+                "type": "image",
+                "key": "mrs-giggy",
+                "url": "assets/images/mrs-giggy.png"
+            },
+            {
+                "type": "image",
+                "key": "blue-circle",
+                "url": "assets/images/blue-circle.png"
+            }
         ]
     }
 }

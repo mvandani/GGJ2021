@@ -37,8 +37,6 @@ export class GameScene extends Phaser.Scene {
 
     preload(): void {
         console.log("Preloading");
-        this.load.image('mr-giggy', 'assets/images/mr-giggy.png');
-        this.load.image('mrs-giggy', 'assets/images/mrs-giggy.png');
     }
 
     init(): void {
