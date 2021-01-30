@@ -14,6 +14,11 @@ enum Controls {
     RIGHT
 };
 
+const followerOffset = {
+    x: 10,
+    y: -10
+};
+
 export class GameScene extends Phaser.Scene {
     // variables
     private fading: boolean;
@@ -147,7 +152,6 @@ export class GameScene extends Phaser.Scene {
         this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
         this.p2.setDisplaySize(75,75);
 
-
         this.physics.add.collider(this.p1, this.wallGroup);
         this.physics.add.collider(this.p2, this.wallGroup);
         this.wallGroup.toggleVisible();
@@ -188,6 +192,9 @@ export class GameScene extends Phaser.Scene {
 
             this.leader = summoner;
             this.allowKeyInput = false;
+
+            summoner.body.immovable = false;
+            summonee.body.immovable = true; // Don't let walls catch the summonee
             
             // If the players are joined, swap their positions
             if(this.arePlayersJoined) {
@@ -209,8 +216,8 @@ export class GameScene extends Phaser.Scene {
             } else { // If the players are separeted moved the summonee behind the summoner
                 this.tweens.add({
                     targets: summonee,
-                    x: summoner.x + 20,
-                    y: summoner.y - 20,
+                    x: summoner.x + followerOffset.x,
+                    y: summoner.y + followerOffset.y,
                     duration: 500,
                     onComplete: () => {
                         this.allowKeyInput = true;
@@ -227,6 +234,8 @@ export class GameScene extends Phaser.Scene {
 
             this.arePlayersJoined = false;
             this.leader = null;
+            this.p1.body.immovable = false;
+            this.p2.body.immovable = false;
         });
 
     }
@@ -241,6 +250,22 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
+    updatePlayerPhysics(p: Phaser.Physics.Arcade.Image): void {
+        const keys = this.playerToKeys.get(p);
+        if(this.isKeyDownForPlayer(Controls.UP, p)) {
+            p.setVelocityY(-300);
+        }
+        if(this.isKeyDownForPlayer(Controls.DOWN, p)) {
+            p.setVelocityY(300);
+        }
+        if(this.isKeyDownForPlayer(Controls.LEFT, p)) {
+            p.setVelocityX(-300);
+        }
+        if(this.isKeyDownForPlayer(Controls.RIGHT, p)) {
+            p.setVelocityX(300);
+        }
+    }
+
     update(): void {
         // Very first update, begin a fade in (camera & music)
         if (this.fading) {
@@ -250,26 +275,23 @@ export class GameScene extends Phaser.Scene {
         }
         this.runGame();
 
-        [this.p1, this.p2].forEach(p => {
-            p.setVelocity(0);
-
-            if(this.allowKeyInput) {
-                const keys = this.playerToKeys.get(p);
-                if(this.isKeyDownForPlayer(Controls.UP, p)) {
-                    p.setVelocityY(-300);
-                }
-                if(this.isKeyDownForPlayer(Controls.DOWN, p)) {
-                    p.setVelocityY(300);
-                }
-                if(this.isKeyDownForPlayer(Controls.LEFT, p)) {
-                    p.setVelocityX(-300);
-                }
-                if(this.isKeyDownForPlayer(Controls.RIGHT, p)) {
-                    p.setVelocityX(300);
-                }
+        [this.p1, this.p2].forEach(p => p.setVelocity(0));
+        if(this.allowKeyInput) {
+            if(this.arePlayersJoined) {
+                // Move the leader and set the follower to be behind the leader
+                const follower: Phaser.Physics.Arcade.Image = this.leader === this.p1 ? this.p2 : this.p1;
+                this.updatePlayerPhysics(this.leader);
+                follower.setPosition(
+                    this.leader.x + followerOffset.x,
+                    this.leader.y + followerOffset.y
+                );
+            } else {
+                [this.p1, this.p2].forEach(p => {
+                    this.updatePlayerPhysics(p);
+                });
             }
-        });
-
+        }
+        
         // The player closer to the bottom of the screen is drawn in front of the other
         if(this.p1.y < this.p2.y) {
             this.p1.setDepth(100);
