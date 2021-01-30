@@ -23,10 +23,18 @@ export class GameScene extends Phaser.Scene {
 
     private p1Keys: Object;
     private p2Keys: Object;
+    private allowKeyInput: Boolean = true;
 
     private p1: Phaser.Physics.Arcade.Image;
     private p2: Phaser.Physics.Arcade.Image;
 
+<<<<<<< HEAD
+=======
+    private arePlayersJoined: Boolean = false;
+
+    // The player that is leading the other. null if they are separated
+    private leader: Phaser.Physics.Arcade.Image;
+>>>>>>> 09b1c51a73c6c0de489a6ac85d9a2059e7eb4cf0
 
     private playerToKeys: Map<Phaser.Physics.Arcade.Image, Object> = new Map();
 
@@ -160,6 +168,80 @@ export class GameScene extends Phaser.Scene {
         this.events.addListener('event', () => {
             // noop
         });
+
+        this.input.keyboard.addListener('keydown-SHIFT', event => {
+            if(!this.allowKeyInput) {
+                return;
+            }
+
+            let summoner: Phaser.Physics.Arcade.Image;
+            let summonee: Phaser.Physics.Arcade.Image;
+            if(event.location === 1) { // Left shift
+                summoner = this.p1;
+                summonee = this.p2;
+            } else if (event.location === 2) { // Right shift
+                summonee = this.p1;
+                summoner = this.p2;
+            }
+
+            // If the summoner is already the leader there is nothing to do.
+            if(summoner === this.leader) {
+                return;
+            }
+
+            this.leader = summoner;
+            this.allowKeyInput = false;
+            
+            // If the players are joined, swap their positions
+            if(this.arePlayersJoined) {
+                this.tweens.add({
+                    targets: summoner,
+                    x: summonee.x,
+                    y: summonee.y,
+                    duration: 500,
+                });
+                this.tweens.add({
+                    targets: summonee,
+                    x: summoner.x,
+                    y: summoner.y,
+                    duration: 500,
+                    onComplete: () => {
+                        this.allowKeyInput = true;
+                    }
+                });
+            } else { // If the players are separeted moved the summonee behind the summoner
+                this.tweens.add({
+                    targets: summonee,
+                    x: summoner.x + 20,
+                    y: summoner.y - 20,
+                    duration: 500,
+                    onComplete: () => {
+                        this.allowKeyInput = true;
+                    }
+                });
+                this.arePlayersJoined = true;
+            }
+        });
+
+        this.input.keyboard.addListener('keydown-SPACE', event => {
+            if(!this.allowKeyInput) {
+                return;
+            }
+
+            this.arePlayersJoined = false;
+            this.leader = null;
+        });
+
+    }
+
+    // If the players are joined, return true if the arg key is pressed for either player.
+    // If the players are separated, return true if the arg key is pressed for the arg player.
+    isKeyDownForPlayer(key, player): Boolean {
+        if(this.arePlayersJoined) {
+            return this.p1Keys[key].isDown || this.p2Keys[key].isDown;
+        } else {
+            return this.playerToKeys.get(player)[key].isDown;
+        }
     }
 
     update(): void {
@@ -174,26 +256,31 @@ export class GameScene extends Phaser.Scene {
         [this.p1, this.p2].forEach(p => {
             p.setVelocity(0);
 
-            const keys = this.playerToKeys.get(p);
-            if(keys[Controls.UP].isDown) {
-                p.setVelocityY(-300);
-            }
-            if(keys[Controls.DOWN].isDown) {
-                p.setVelocityY(300);
-            }
-            if(keys[Controls.LEFT].isDown) {
-                p.setVelocityX(-300);
-            }
-            if(keys[Controls.RIGHT].isDown) {
-                p.setVelocityX(300);
+            if(this.allowKeyInput) {
+                const keys = this.playerToKeys.get(p);
+                if(this.isKeyDownForPlayer(Controls.UP, p)) {
+                    p.setVelocityY(-300);
+                }
+                if(this.isKeyDownForPlayer(Controls.DOWN, p)) {
+                    p.setVelocityY(300);
+                }
+                if(this.isKeyDownForPlayer(Controls.LEFT, p)) {
+                    p.setVelocityX(-300);
+                }
+                if(this.isKeyDownForPlayer(Controls.RIGHT, p)) {
+                    p.setVelocityX(300);
+                }
             }
         });
 
-        /*
-        if(this.p1Keys[Controls.UP].isDown) {
-            this.p1.setVelocityY(-300);
+        // The player closer to the bottom of the screen is drawn in front of the other
+        if(this.p1.y < this.p2.y) {
+            this.p1.setDepth(100);
+            this.p2.setDepth(101);
+        } else {
+            this.p2.setDepth(100);
+            this.p1.setDepth(101);
         }
-        */
     }
 
     private runGame() {
