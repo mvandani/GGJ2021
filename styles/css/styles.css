@@ -6,7 +6,7 @@
 body {
     font-size: 10px;
     color: black;
-    background-color: #6d5a5a;
+    background-color: #3f3a3a;
 }
 
 .hidden {
@@ -39,5 +39,12 @@ body div.container div#game {
 
 
 body div.container div#game canvas {
-    border: 3px solid #CCCCCC;
+    border: 3px solid #836767;
+}
+
+header {
+    margin-bottom:.5em;
+    font-size:24pt;
+    color:white;
+    font-family: sans-serif;
 }

@@ -46,15 +46,17 @@ export class MainMenu extends Phaser.Scene {
         // Listen for when the camera is done fading after a selection has been chosen
         this.cameras.main.once('camerafadeoutcomplete', (camera) => {
             // this.music.stop();
-            this.scene.start('GameScene');
+            //this.scene.start('GameScene');
         });
+
+        this.scene.start('GameScene');
     }
 
     update() {
         // If fadig is complete, listen for a key input and begin fading out
         if (!this.fading) {
             if (Phaser.Input.Keyboard.JustDown(this.startKey)) {
-                let fadeOutDuration: number = 2000;
+                let fadeOutDuration: number = 500;
                 this.cameras.main.fadeOut(fadeOutDuration, 255, 255, 255);
                 this.fading = true;
             }

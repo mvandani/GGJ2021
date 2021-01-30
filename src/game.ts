@@ -7,9 +7,9 @@ import { GameScene } from './scenes/GameScene';
 
 // main game configuration
 const config: GameConfig = {
-  title: 'GGJ2020',
-  width: 1024,
-  height: 768,
+  title: 'GGJ2021',
+  width: 1000,
+  height: 1000,
   type: Phaser.WEBGL,
   parent: 'game',
   scene: [Boot, MainMenu, GameScene],
@@ -22,7 +22,7 @@ const config: GameConfig = {
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 300 },
+      //gravity: { y: 300 },
       debug: false
     }
   },
