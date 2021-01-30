@@ -23,6 +23,9 @@ export class GameScene extends Phaser.Scene {
 
     private p1Keys: Object;
     private p2Keys: Object;
+    private allowKeyInput: Boolean = true;
+
+    private arePlayersJoined: Boolean = false;
 
     private p1: Phaser.Physics.Arcade.Image;
     private p2: Phaser.Physics.Arcade.Image;
@@ -77,6 +80,56 @@ export class GameScene extends Phaser.Scene {
         this.events.addListener('event', () => {
             // noop
         });
+
+        this.input.keyboard.addListener('keydown-SHIFT', event => {
+            if(!this.allowKeyInput) {
+                return;
+            }
+
+            let summoner: Phaser.Physics.Arcade.Image;
+            let summonee: Phaser.Physics.Arcade.Image;
+            if(event.location === 1) { // Left shift
+                summoner = this.p1;
+                summonee = this.p2;
+            } else if (event.location === 2) { // Right shift
+                summonee = this.p1;
+                summoner = this.p2;
+            }
+            
+            this.allowKeyInput = false;
+            this.arePlayersJoined = true;
+
+            summonee.setDepth(100);
+            summoner.setDepth(101);
+            this.tweens.add({
+                targets: summonee,
+                x: summoner.x + 20,
+                y: summoner.y + 20,
+                duration: 500,
+                onComplete: () => {
+                    this.allowKeyInput = true;
+                }
+            });
+        });
+
+        this.input.keyboard.addListener('keydown-SPACE', event => {
+            if(!this.allowKeyInput) {
+                return;
+            }
+
+            this.arePlayersJoined = false;
+        });
+
+    }
+
+    // If the players are joined, return true if the arg key is pressed for either player.
+    // If the players are separated, return true if the arg key is pressed for the arg player.
+    isKeyDownForPlayer(key, player): Boolean {
+        if(this.arePlayersJoined) {
+            return this.p1Keys[key].isDown || this.p2Keys[key].isDown;
+        } else {
+            return this.playerToKeys.get(player)[key].isDown;
+        }
     }
 
     update(): void {
@@ -91,26 +144,22 @@ export class GameScene extends Phaser.Scene {
         [this.p1, this.p2].forEach(p => {
             p.setVelocity(0);
 
-            const keys = this.playerToKeys.get(p);
-            if(keys[Controls.UP].isDown) {
-                p.setVelocityY(-300);
-            }
-            if(keys[Controls.DOWN].isDown) {
-                p.setVelocityY(300);
-            }
-            if(keys[Controls.LEFT].isDown) {
-                p.setVelocityX(-300);
-            }
-            if(keys[Controls.RIGHT].isDown) {
-                p.setVelocityX(300);
+            if(this.allowKeyInput) {
+                const keys = this.playerToKeys.get(p);
+                if(this.isKeyDownForPlayer(Controls.UP, p)) {
+                    p.setVelocityY(-300);
+                }
+                if(this.isKeyDownForPlayer(Controls.DOWN, p)) {
+                    p.setVelocityY(300);
+                }
+                if(this.isKeyDownForPlayer(Controls.LEFT, p)) {
+                    p.setVelocityX(-300);
+                }
+                if(this.isKeyDownForPlayer(Controls.RIGHT, p)) {
+                    p.setVelocityX(300);
+                }
             }
         });
-
-        /*
-        if(this.p1Keys[Controls.UP].isDown) {
-            this.p1.setVelocityY(-300);
-        }
-        */
     }
 
     private runGame() {

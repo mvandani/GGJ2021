@@ -1,11 +1,11 @@
-# GGJ2020
-Global Game Jam 2020 Boys
+# GGJ2021
+Global Game Jam 2021 :: Guinea Dig 2 Many Kids
 
 ## Setup Instructions
 We are using Typescript with webpack. You must have a server running to view the game, phaser does not transfer files over a file based webpage.
 
 ## 1) Checkout source
-Clone the repo to your machine. `git clone https://github.com/mcouture5/GGJ2020.git`
+Clone the repo to your machine. `git clone https://github.com/mvandani/GGJ2021.git`
 
 ## 1) Install dependencies
 `npm install` in the main folder.
