@@ -27,14 +27,11 @@ export class GameScene extends Phaser.Scene {
 
     private p1: Phaser.Physics.Arcade.Image;
     private p2: Phaser.Physics.Arcade.Image;
-
-<<<<<<< HEAD
-=======
+    
     private arePlayersJoined: Boolean = false;
 
     // The player that is leading the other. null if they are separated
     private leader: Phaser.Physics.Arcade.Image;
->>>>>>> 09b1c51a73c6c0de489a6ac85d9a2059e7eb4cf0
 
     private playerToKeys: Map<Phaser.Physics.Arcade.Image, Object> = new Map();
 

@@ -13,11 +13,6 @@
             },
             {
                 "type": "image",
-                "key": "blue-circle",
-                "url": "assets/images/blue-circle.png"
-            },
-            {
-                "type": "image",
                 "key": "red-square",
                 "url": "assets/images/red-square.png"
             },
