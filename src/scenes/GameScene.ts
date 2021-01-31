@@ -67,6 +67,10 @@ export class GameScene extends Phaser.Scene {
     private enemiesToDefintions: Map<Phaser.Physics.Arcade.Sprite, any> = new Map();
     
     private levelConfig: Object;
+    private scoreText;
+    private timerText;
+    private livesText;
+    private timeSpent: integer;
 
     // A lookup of enemy type enums to objects defining a type of enemy, which includes:
     // - Its asset type for this.physics.add.image
@@ -158,6 +162,7 @@ export class GameScene extends Phaser.Scene {
 
         this.level = data.level;
         this.levelConfig = this.cache.json.get(this.level);
+        this.timeSpent = 0;
 
         this.p1Keys = this.input.keyboard.addKeys({
             [Controls.UP]: Phaser.Input.Keyboard.KeyCodes.W,
@@ -229,6 +234,40 @@ export class GameScene extends Phaser.Scene {
             frameRate: 24,
             repeat: -1,
         })
+
+        this.scoreText = this.add.text(0,0,
+            'Points: 0',
+            {
+                fontFamily: 'Potta One',
+                fontSize: 30,
+                color: '#836767'
+            }
+        );
+        this.timerText = this.add.text(500,0,
+            'Time spent: 0',
+            {
+                fontFamily: 'Potta One',
+                fontSize: 30,
+                color: '#836767'
+            }
+        );
+        this.livesText = this.add.text(1000,0,
+            'Lives: 3',
+            {
+                fontFamily: 'Potta One',
+                fontSize: 30,
+                color: '#836767'
+            }
+        );
+        var timer = this.time.addEvent({
+            delay: 1000,
+            callback: () => {
+                this.timerText.setText("Time spent: " + this.timeSpent);
+                this.timeSpent += 1;
+            },
+            callbackScope: this,
+            loop: true
+        });
 
         const p1Start = this.levelConfig["player1"]["start"];
         const p2Start = this.levelConfig["player2"]["start"];

@@ -30,7 +30,6 @@ export class Kid extends Phaser.GameObjects.Sprite {
 	
     update(): void {
         const prevSpeed = this.speed;
-        this.flipX = this.speed * Math.sin(this.direction) >= 0;
         switch(this.behaviorCode) {
             case 0:
                 this.speed = 0;
@@ -55,7 +54,9 @@ export class Kid extends Phaser.GameObjects.Sprite {
             }
         }
         const velX = this.speed * Math.sin(this.direction);
-        this.flipX = velX < 0;
+        if (velX !== 0) {
+            this.flipX = velX < 0;
+        }
         this.body.setVelocityX(velX);
         this.body.setVelocityY(this.speed * Math.cos(this.direction));
 	}
