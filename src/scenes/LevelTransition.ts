@@ -46,8 +46,10 @@ export class LevelTransition extends Phaser.Scene {
         });
 
         let left = this.physics.add.sprite((this.cameras.main.width / 2), (this.cameras.main.height / 4) - 68 + margin, "cherry");
-        left.setDisplaySize(200,136);
         left.play("cherry-walk");
+        left.setDisplaySize(200,136);
+        left.setSize(200,136);
+        left.refreshBody();
 
         const winText = this.add.text(0,0,
             'You Did It!',

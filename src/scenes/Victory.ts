@@ -48,16 +48,16 @@ export class Victory extends Phaser.Scene {
         });
 
         let left = this.physics.add.sprite((this.cameras.main.width / 4), (this.cameras.main.height / 4) - 68 + margin, "cherry");
+        left.play("cherry-walk");
         left.setDisplaySize(200,136);
         left.setSize(200,136);
         left.refreshBody();
-        left.play("cherry-walk");
         
         let right = this.physics.add.sprite((3 * this.cameras.main.width / 4) , (this.cameras.main.height / 4) - 68 + margin, "golden");
+        right.play("golden-walk");
         right.setDisplaySize(200,136);
         right.setSize(200,136);
         right.refreshBody();
-        right.play("golden-walk");
 
         const winText = this.add.text(0,0,
             'You Beat The Game!',
