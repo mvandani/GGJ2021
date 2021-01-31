@@ -193,6 +193,11 @@
                 "type": "audio",
                 "key": "gk",
                 "url": "assets/sound/GuineaKidsSong.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "deathsong",
+                "url": "assets/sound/deathsong.mp3"
             }
         ]
     }
