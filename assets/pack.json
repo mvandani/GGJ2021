@@ -3,6 +3,16 @@
         "files": [
             {
                 "type": "image",
+                "key": "title",
+                "url": "assets/images/title.png"
+            },
+            {
+                "type": "image",
+                "key": "help",
+                "url": "assets/images/help.png"
+            },
+            {
+                "type": "image",
                 "key": "crib",
                 "url": "assets/images/crib.png"
             },
@@ -30,7 +40,7 @@
                     "frameHeight": 69
                 }
             },
-            
+
             {
                 "type": "spritesheet",
                 "key": "golden-idle",

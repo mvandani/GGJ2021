@@ -18,33 +18,19 @@ export class Instructions extends Phaser.Scene {
 
     create() {
         // Load background image
-        // this.bg = this.add.sprite(0, 0, 'mainmenu-bg').setOrigin(0,0);
+        const bg = this.add.sprite(0, 0, 'help').setOrigin(0,0);
 
         // Default a default bg color
         this.cameras.main.setBackgroundColor(0x2c2727);
 
         const margin = 50;
 
-        const instructionsText = this.add.text(0,0,
-            'Instructions will go here!',
-            {
-                fontFamily: 'Potta One',
-                fontSize: 30,
-                color: '#836767'
-            }
-        );
-        instructionsText.setPosition(
-            (this.cameras.main.width / 2) - instructionsText.displayWidth/2,
-            (this.cameras.main.height / 2) - instructionsText.displayHeight/2,
-        );
-
-
         const mainMenuText = this.add.text(0,0,
             'Press SPACE to return to the main menu',
             {
                 fontFamily: 'Potta One',
                 fontSize: 24,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         mainMenuText.setPosition(
