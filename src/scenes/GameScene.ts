@@ -54,6 +54,9 @@ export class GameScene extends Phaser.Scene {
     private oinks: Array<Phaser.Sound.BaseSound>;
     private squeaks: Array<Phaser.Sound.BaseSound>;
 
+    
+    private music: Phaser.Sound.BaseSound;
+
     // The player that is leading the other. null if they are separated
     private leader: Phaser.Physics.Arcade.Sprite;
 
@@ -198,6 +201,8 @@ export class GameScene extends Phaser.Scene {
 
         this.oinks = ['oink1', 'oink2', 'oink3'].map(oink => this.sound.add(oink, {volume: 1.5}));
         this.squeaks = ['squeak1', 'squeak2'].map(squeak => this.sound.add(squeak, {volume: 1.5}));
+        this.music = this.sound.add('music3');
+        this.music.play();
     }
 
     create(): void {
@@ -627,8 +632,10 @@ export class GameScene extends Phaser.Scene {
         let nextLevel = this.LEVELS[this.LEVELS.indexOf(this.level) + 1];
         if (Phaser.Input.Keyboard.JustDown(this.skipLevelKey)) {
             if (nextLevel) {
+                this.music.stop();
                 this.scene.start('LevelTransition', {nextLevel: nextLevel});
             } else {
+                this.music.stop();
                 this.scene.start('Victory');
             }
         }
@@ -638,6 +645,7 @@ export class GameScene extends Phaser.Scene {
             over = over && (this.kids[i] as any).inCrib;
         }
         if (over) {
+            this.music.stop();
             this.scene.start('LevelTransition', {nextLevel: nextLevel});
         }
         /*
@@ -654,6 +662,7 @@ export class GameScene extends Phaser.Scene {
     }
 
     private restartGame(): void {
+        this.music.stop();
         this.scene.start('MainMenu');
     }
 }

@@ -178,6 +178,11 @@
                 "type": "audio",
                 "key": "squeak2",
                 "url": "assets/sound/squeak2.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "music3",
+                "url": "assets/sound/music3.mp3"
             }
         ]
     }
