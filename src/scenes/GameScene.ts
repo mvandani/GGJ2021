@@ -609,18 +609,6 @@ export class GameScene extends Phaser.Scene {
                 }
             })
         }
-
-        if(this.isCoolingDown(this.p1)) {
-            console.log("cooling down");
-        } else {
-            console.log("-")
-        }
-
-        if(this.isCoolingDown(this.p1)) {
-            console.log("cooling down");
-        } else {
-            console.log("-")
-        }
         
         this.kids.forEach(kid => kid.update());
 
