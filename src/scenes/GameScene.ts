@@ -634,8 +634,13 @@ export class GameScene extends Phaser.Scene {
             over = over && (this.kids[i] as any).inCrib;
         }
         if (over) {
-            this.music.stop();
-            this.scene.start('LevelTransition', {nextLevel: nextLevel});
+            if (nextLevel) {
+                this.music.stop();
+                this.scene.start('LevelTransition', {nextLevel: nextLevel});
+            } else {
+                this.music.stop();
+                this.scene.start('Victory');
+            }
         }
 
         if(this.lives == 0) {
