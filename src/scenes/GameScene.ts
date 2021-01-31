@@ -340,7 +340,7 @@ export class GameScene extends Phaser.Scene {
 
     createCrib(): void {
         this.crib = this.physics.add.image(500, 800, "crib");
-        this.crib.setDisplaySize(200,200);
+        this.crib.setDisplaySize(100,100);
     }
 
     updateEnemies(): void {
