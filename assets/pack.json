@@ -18,6 +18,25 @@
             },
 
             {
+                "type": "spritesheet",
+                "key": "cherry",
+                "url": "assets/images/cherry-walk.png",
+                "frameConfig": {
+                    "frameWidth": 417,
+                    "frameHeight": 288
+                }
+            },
+            {
+                "type": "spritesheet",
+                "key": "golden",
+                "url": "assets/images/cherry-walk.png",
+                "frameConfig": {
+                    "frameWidth": 417,
+                    "frameHeight": 288
+                }
+            },
+
+            {
                 "type": "image",
                 "key": "snake-01",
                 "url": "assets/images/snake-01.png"

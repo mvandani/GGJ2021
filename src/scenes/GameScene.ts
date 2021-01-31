@@ -35,15 +35,15 @@ export class GameScene extends Phaser.Scene {
     private p2Keys: Object;
     private allowKeyInput: Boolean = true;
 
-    private p1: Phaser.Physics.Arcade.Image;
-    private p2: Phaser.Physics.Arcade.Image;
+    private p1: Phaser.Physics.Arcade.Sprite;
+    private p2: Phaser.Physics.Arcade.Sprite;
     
     private arePlayersJoined: Boolean = false;
 
     // The player that is leading the other. null if they are separated
-    private leader: Phaser.Physics.Arcade.Image;
+    private leader: Phaser.Physics.Arcade.Sprite;
 
-    private playerToKeys: Map<Phaser.Physics.Arcade.Image, Object> = new Map();
+    private playerToKeys: Map<Phaser.Physics.Arcade.Sprite, Object> = new Map();
 
     private gameMap:GameMap;
 
@@ -146,11 +146,32 @@ export class GameScene extends Phaser.Scene {
 
         this.gameMap = new GameMap(this,0,0);
 
-        this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
-        this.p1.setDisplaySize(75,75);
+        this.anims.create({
+            key: "cherry-left",
+            frames: this.anims.generateFrameNumbers("cherry", {start: 0, end: 7}),
+            frameRate: 24,
+            repeat: -1,
+        });
+        const left = this.anims.create({
+            key: "golden-left",
+            frames: this.anims.generateFrameNumbers("golden", {start: 0, end: 7}),
+            frameRate: 24,
+            repeat: -1,
+        });
 
-        this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
-        this.p2.setDisplaySize(75,75);
+        this.p1 = this.physics.add.sprite(300, 600, "cherry");
+        this.p1.play("cherry-left");
+        
+        this.p2 = this.physics.add.sprite(700, 600, "golden");
+        this.p2.play("golden-left");
+
+        
+
+        //this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
+        this.p1.setDisplaySize(100,69);
+
+        //this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
+        this.p2.setDisplaySize(100,69);
 
 
         this.physics.add.collider(this.p1, this.gameMap.wallGroup);
@@ -174,8 +195,8 @@ export class GameScene extends Phaser.Scene {
                 return;
             }
 
-            let summoner: Phaser.Physics.Arcade.Image;
-            let summonee: Phaser.Physics.Arcade.Image;
+            let summoner: Phaser.Physics.Arcade.Sprite;
+            let summonee: Phaser.Physics.Arcade.Sprite;
             if(event.location === 1) { // Left shift
                 summoner = this.p1;
                 summonee = this.p2;
@@ -194,6 +215,9 @@ export class GameScene extends Phaser.Scene {
 
             summoner.body.immovable = false;
             summonee.body.immovable = true; // Don't let walls catch the summonee
+
+            summonee.setDepth(100);
+            summoner.setDepth(101);
             
             // If the players are joined, swap their positions
             if(this.arePlayersJoined) {
@@ -284,7 +308,7 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
-    updatePlayerPhysics(p: Phaser.Physics.Arcade.Image): void {
+    updatePlayerPhysics(p: Phaser.Physics.Arcade.Sprite): void {
         const keys = this.playerToKeys.get(p);
         if(this.isKeyDownForPlayer(Controls.UP, p)) {
             p.setVelocityY(-300);
@@ -294,9 +318,11 @@ export class GameScene extends Phaser.Scene {
         }
         if(this.isKeyDownForPlayer(Controls.LEFT, p)) {
             p.setVelocityX(-300);
+            p.flipX = true;
         }
         if(this.isKeyDownForPlayer(Controls.RIGHT, p)) {
             p.setVelocityX(300);
+            p.flipX = false;
         }
     }
 
@@ -315,25 +341,44 @@ export class GameScene extends Phaser.Scene {
                 // Move the leader and set the follower to be behind the leader
                 const follower: Phaser.Physics.Arcade.Image = this.leader === this.p1 ? this.p2 : this.p1;
                 this.updatePlayerPhysics(this.leader);
+
+                let followerOffsetX = 10;
+                let followerOffsetY = -10;
+                if(this.isKeyDownForPlayer(Controls.UP, this.leader)) {
+                    followerOffsetY = 0;
+                }
+                if(this.isKeyDownForPlayer(Controls.DOWN, this.leader)) {
+                    followerOffsetY = -10;
+                }
+                if(this.isKeyDownForPlayer(Controls.LEFT, this.leader)) {
+                    followerOffsetX = 10;
+                }
+                if(this.isKeyDownForPlayer(Controls.RIGHT, this.leader)) {
+                    followerOffsetX = -10;
+                }
+
                 follower.setPosition(
-                    this.leader.x + followerOffset.x,
-                    this.leader.y + followerOffset.y
+                    this.leader.x + followerOffsetX,
+                    this.leader.y + followerOffsetY
                 );
+                follower.flipX = this.leader.flipX;
             } else {
                 [this.p1, this.p2].forEach(p => {
                     this.updatePlayerPhysics(p);
                 });
+
+                // The player closer to the bottom of the screen is drawn in front of the other
+                if(this.p1.y < this.p2.y) {
+                    this.p1.setDepth(100);
+                    this.p2.setDepth(101);
+                } else {
+                    this.p2.setDepth(100);
+                    this.p1.setDepth(101);
+                }
             }
         }
         
-        // The player closer to the bottom of the screen is drawn in front of the other
-        if(this.p1.y < this.p2.y) {
-            this.p1.setDepth(100);
-            this.p2.setDepth(101);
-        } else {
-            this.p2.setDepth(100);
-            this.p1.setDepth(101);
-        }
+        
 
         this.updateEnemies();
     }
