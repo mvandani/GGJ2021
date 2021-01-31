@@ -28,8 +28,12 @@ export class GameScene extends Phaser.Scene {
     // variables
     private fading: boolean;
 
+    private skipLevelKey: Phaser.Input.Keyboard.Key;
+
     // Game state
     private state: GameState;
+
+    private LEVELS = ['level1half',  'level2', 'level3', 'level4'];
 
     private level: string;
 
@@ -127,6 +131,10 @@ export class GameScene extends Phaser.Scene {
     init(data): void {
         // Starting level
         this.state = GameState.STARTING_LEVEL;
+
+        this.skipLevelKey = this.input.keyboard.addKey(
+            Phaser.Input.Keyboard.KeyCodes.ESC
+        );
         // starts fading
         this.fading = true;
 
@@ -388,6 +396,15 @@ export class GameScene extends Phaser.Scene {
     }
 
     private runGame() {
+
+        if (Phaser.Input.Keyboard.JustDown(this.skipLevelKey)) {
+            let nextLevel = this.LEVELS[this.LEVELS.indexOf(this.level) + 1];
+            if (nextLevel) {
+                this.scene.start('LevelTransition', {nextLevel: nextLevel});
+            } else {
+                this.scene.start('Victory');
+            }
+        }
         /*
         switch (this.state) {
             case GameState.STARTING_LEVEL:
