@@ -10,7 +10,7 @@ import { MapBuilder } from './scenes/MapBuilder';
 const config: GameConfig = {
   title: 'GGJ2021',
   width: 1500,
-  height: 1000,
+  height: 900,
   type: Phaser.WEBGL,
   parent: 'game',
   scene: [Boot, MainMenu, GameScene, MapBuilder],
@@ -24,7 +24,7 @@ const config: GameConfig = {
     default: 'arcade',
     arcade: {
       //gravity: { y: 300 },
-      debug: true
+      debug: false
     }
   },
   backgroundColor: '#fff',

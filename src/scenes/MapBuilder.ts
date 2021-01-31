@@ -40,6 +40,7 @@ export class MapBuilder extends Phaser.Scene {
     }
 
     init(): void {
+        this.load.json('newMap', './assets/newMap.json');
         // Starting level
         this.state = GameState.STARTING_LEVEL;
         // starts fading

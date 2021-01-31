@@ -11,7 +11,7 @@ export class GameMap extends Phaser.GameObjects.Container {
     // Contains all the children. Used for "collision" detections
     //private children: FubarObject[];
 
-    public TILE_SIZE: number = 50;
+    public TILE_SIZE: number = 100;
 
     public wallGroup: Phaser.Physics.Arcade.StaticGroup;
 
