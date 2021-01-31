@@ -48,8 +48,8 @@ export class Boot extends Phaser.Scene {
         this.load.json('walls', './assets/walls.json');
         this.load.json('tiles', './assets/tiles.json');
         this.load.json('level1half', './assets/level1half.json');
-        this.load.json('level1', './assets/level1.json');
         this.load.json('level2', './assets/level2.json');
+        this.load.json('level3', './assets/level3.json');
         this.load.json('level4', './assets/level4.json');
         this.load.json('newMap', './assets/newMap.json');
         
