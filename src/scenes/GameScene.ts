@@ -215,12 +215,10 @@ export class GameScene extends Phaser.Scene {
 
         const p1Start = this.levelConfig["player1"]["start"];
         const p2Start = this.levelConfig["player2"]["start"];
-        this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 12, p1Start[1] * 100 + 25, "cherry");
-        //this.p1.setOrigin(0, 0);
+        this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 50, p1Start[1] * 100 + 50, "cherry");
         this.p1.play("cherry-walk");
         
-        this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 12, p2Start[1] * 100 + 25, "golden");
-        //this.p2.setOrigin(0, 0);
+        this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 50, p2Start[1] * 100 + 50, "golden");
         this.p2.play("golden-walk");
         
 
@@ -330,17 +328,14 @@ export class GameScene extends Phaser.Scene {
     createEnemies(): void {
         const enemyTypes = [
             EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.SMART_SNEK,
             EnemyTypes.SMART_SNEK,
         ];
 
-        enemyTypes.forEach(enemyType => {
+        this.levelConfig["snakes"].forEach(snake => {
             // Get the definition for this type of enemy
-            const eDefinition = this.enemyDefinitions[enemyType];
+            const eDefinition = this.enemyDefinitions[enemyTypes[snake['type']]];
 
-            const e = this.physics.add.sprite(0,0, eDefinition.assetType);
+            const e = this.physics.add.sprite(snake['start'][0] * 100 + 50, snake['start'][1] * 100 + 50, eDefinition.assetType);
             e.setDisplaySize(60,100);
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
@@ -356,8 +351,8 @@ export class GameScene extends Phaser.Scene {
         this.levelConfig["kids"].forEach(kidConfig => {
             const kid = new Kid({
                 scene: this,
-                x: kidConfig['start'][0] * 100 + 25,
-                y: kidConfig['start'][1] * 100 + 25,
+                x: kidConfig['start'][0] * 100 + 50,
+                y: kidConfig['start'][1] * 100 + 50,
                 key: 'kid',
                 behaviorCode: kidConfig['behavior']
             });
@@ -370,8 +365,7 @@ export class GameScene extends Phaser.Scene {
 
     createCrib(): void {
         const cribStart = this.levelConfig["crib"]["start"];
-        this.crib = this.physics.add.image(cribStart[0] * 100, cribStart[1] * 100, "crib");
-        this.crib.setOrigin(0, 0);
+        this.crib = this.physics.add.image(cribStart[0] * 100 + 50, cribStart[1] * 100 + 50, "crib");
         this.crib.setDisplaySize(100, 100);
     }
 

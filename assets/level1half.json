@@ -11,21 +11,21 @@
     },
     "kids": [
         {
-            "behavior": 0,
+            "behavior": 1,
             "start": [2, 3]
         },
         {
-            "behavior": 0,
+            "behavior": 2,
             "start": [14, 2]
         }
     ],
     "snakes": [
         {
-            "behavior": 0,
-            "start": [5, 8]
+            "type": 0,
+            "start": [2, 3]
         },
         {
-            "behavior": 0,
+            "type": 1,
             "start": [14, 2]
         }
     ],
