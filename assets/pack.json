@@ -8,6 +8,11 @@
             },
             {
                 "type": "image",
+                "key": "credits",
+                "url": "assets/images/credits.png"
+            },
+            {
+                "type": "image",
                 "key": "help",
                 "url": "assets/images/help.png"
             },
@@ -183,6 +188,11 @@
                 "type": "audio",
                 "key": "music3",
                 "url": "assets/sound/music3.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "gk",
+                "url": "assets/sound/GuineaKidsSong.mp3"
             }
         ]
     }

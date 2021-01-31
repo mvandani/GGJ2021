@@ -201,7 +201,7 @@ export class GameScene extends Phaser.Scene {
 
         this.oinks = ['oink1', 'oink2', 'oink3'].map(oink => this.sound.add(oink, {volume: 1.5}));
         this.squeaks = ['squeak1', 'squeak2'].map(squeak => this.sound.add(squeak, {volume: 1.5}));
-        this.music = this.sound.add('music3');
+        this.music = this.sound.add('music3', {volume: .25});
         this.music.play();
     }
 
@@ -608,18 +608,6 @@ export class GameScene extends Phaser.Scene {
                     ));
                 }
             })
-        }
-
-        if(this.isCoolingDown(this.p1)) {
-            console.log("cooling down");
-        } else {
-            console.log("-")
-        }
-
-        if(this.isCoolingDown(this.p1)) {
-            console.log("cooling down");
-        } else {
-            console.log("-")
         }
         
         this.kids.forEach(kid => kid.update());
