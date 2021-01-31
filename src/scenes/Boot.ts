@@ -52,6 +52,8 @@ export class Boot extends Phaser.Scene {
         this.load.json('level2', './assets/level2.json');
         this.load.json('level4', './assets/level4.json');
         this.load.json('newMap', './assets/newMap.json');
+        
+        this.load.spritesheet('kid', 'assets/images/kid.png', {frameWidth: 45, frameHeight: 45});
     }
 
     update() {

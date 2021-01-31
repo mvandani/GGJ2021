@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { GameMap } from '../map/GameMap';
+import { Kid } from '../objects/Kid';
 enum GameState {
     STARTING_LEVEL,
     GETTING_RECIPE,
@@ -50,6 +51,7 @@ export class GameScene extends Phaser.Scene {
     private gameMap:GameMap;
 
     private enemies: Array<Phaser.Physics.Arcade.Image> = [];
+    private kids: Array<Phaser.GameObjects.Sprite> = [];
 
     // A map of enemy Images to enemyDefinitions (see below)
     private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
@@ -144,6 +146,18 @@ export class GameScene extends Phaser.Scene {
             [Controls.LEFT]: Phaser.Input.Keyboard.KeyCodes.LEFT,
             [Controls.RIGHT]: Phaser.Input.Keyboard.KeyCodes.RIGHT,
         });
+        this.anims.create({
+            key: 'kid-idle',
+            frames: this.anims.generateFrameNames('kid', { start: 0, end: 7 }),
+            frameRate: 6,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: 'kid-run',
+            frames: this.anims.generateFrameNames('kid', { start: 8, end: 9 }),
+            frameRate: 6,
+            repeat: -1,
+        });
     }
 
     create(): void {
@@ -187,6 +201,7 @@ export class GameScene extends Phaser.Scene {
 
         [this.p1, this.p2].forEach(p => p.setCollideWorldBounds(true));
 
+        this.createKids();
         this.createEnemies();
         
         // Listen for events from obejcts
@@ -292,6 +307,25 @@ export class GameScene extends Phaser.Scene {
         });
     }
 
+    createKids(): void {
+        const kidBehaviors = [0, 1, 1, 1, 2];
+
+        kidBehaviors.forEach(behaviorCode => {
+
+            const kid = new Kid({
+                scene: this,
+                x: Math.floor(Math.random() * 15) * 100 + 25,
+                y: Math.floor(Math.random() * 9) * 100 + 25,
+                key: 'kid',
+                behaviorCode: behaviorCode
+            });
+            
+            this.add.existing(kid);
+            this.physics.add.collider(kid, this.gameMap.wallGroup);
+            this.kids.push(kid);
+        });
+    }
+
     updateEnemies(): void {
         this.enemies.forEach(e => {
             // Lookup the definition for this enemy...
@@ -382,7 +416,7 @@ export class GameScene extends Phaser.Scene {
             }
         }
         
-        
+        this.kids.forEach(kid => kid.update());
 
         this.updateEnemies();
     }
