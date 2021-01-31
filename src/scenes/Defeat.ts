@@ -49,7 +49,7 @@ export class Defeat extends Phaser.Scene {
         left.refreshBody();
 
         const winText = this.add.text(0,0,
-            'You Did It!',
+            'You Lose!',
             {
                 fontFamily: 'Potta One',
                 fontSize: 50,
