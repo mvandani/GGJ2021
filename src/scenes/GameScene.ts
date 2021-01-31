@@ -72,20 +72,24 @@ export class GameScene extends Phaser.Scene {
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Anytime a dumb danger noodle cannot move in any direction or if it reaches
                 // a location divisible by 50, it chooses a new direction to move in randomly.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
                     const rando = Math.random();
                     if(rando < .25) {
                         e.setVelocityX(-300);
                         e.setVelocityY(0);
+                        e.setRotation(-Math.PI/2);
                     } else if(rando < .5) {
                         e.setVelocityX(300);
                         e.setVelocityY(0);
+                        e.setRotation(Math.PI/2);
                     } else if(rando < .75) {
                         e.setVelocityX(0);
                         e.setVelocityY(-300);
+                        e.setRotation(0);
                     } else {
                         e.setVelocityX(0);
                         e.setVelocityY(300);
+                        e.setRotation(Math.PI);
                     }
                 }
             }
@@ -96,14 +100,16 @@ export class GameScene extends Phaser.Scene {
                 // Smart sneks move toward p1 in either the x or y dimension (randomly decided) if they
                 // cannot move any further in their current direction or if they reach a location divisble
                 // by 50.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
                     if(Math.random() > .5) {
                         e.setVelocityY(0);
                         const dx = e.x - this.p1.x;
                         if(dx < 0) {
                             e.setVelocityX(300);
+                            e.setRotation(Math.PI/2);
                         } else if(dx > 0) {
                             e.setVelocityX(-300);
+                            e.setRotation(-Math.PI/2);
                         } else {
                             e.setVelocityX(0);
                         }
@@ -112,8 +118,10 @@ export class GameScene extends Phaser.Scene {
                         const dy = e.y - this.p1.y;
                         if(dy < 0) {
                             e.setVelocityY(300);
+                            e.setRotation(Math.PI);
                         } else if(dy > 0) {
                             e.setVelocityY(-300);
+                            e.setRotation(0);
                         } else {
                             e.setVelocityY(0);
                         }
@@ -340,6 +348,8 @@ export class GameScene extends Phaser.Scene {
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
             e.play(eDefinition.assetType);
+            e.setSize(100,100);
+            e.refreshBody();
             this.enemies.push(e);
 
             // Pair the enemy object with its definition
