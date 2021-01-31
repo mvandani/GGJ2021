@@ -407,7 +407,7 @@ export class GameScene extends Phaser.Scene {
 
 
     kidInCrib(kid, crib) {
-            this.oinks[0].play();
+            this.oinks[Math.floor(Math.random() * Math.floor(3))].play();
             if ((this.p1 as any).kids) {
                 let kidIndex = (this.p1 as any).kids.indexOf(kid);
                 if (kidIndex > -1) {
@@ -426,7 +426,7 @@ export class GameScene extends Phaser.Scene {
     pickupKid(kid, parent) {
         if(!kid.isHeld) {
             kid.isHeld = true;
-            this.oinks[0].play();
+            this.oinks[Math.floor(Math.random() * Math.floor(3))].play();
             if(!parent.kids)
                 parent.kids = [];
             parent.kids.push(kid);
