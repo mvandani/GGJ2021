@@ -194,10 +194,12 @@ export class GameScene extends Phaser.Scene {
         this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 12, p1Start[1] * 100 + 25, "cherry");
         this.p1.setOrigin(0, 0);
         this.p1.play("cherry-left");
+        this.p1.setBounce(10);
         
         this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 12, p2Start[1] * 100 + 25, "golden");
         this.p2.setOrigin(0, 0);
         this.p2.play("golden-left");
+        this.p2.setBounce(0.5);
 
         
 

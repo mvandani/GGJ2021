@@ -44,20 +44,10 @@ export class LevelTransition extends Phaser.Scene {
             frameRate: 24,
             repeat: -1,
         });
-        this.anims.create({
-            key: "golden-left",
-            frames: this.anims.generateFrameNumbers("golden", {start: 0, end: 7}),
-            frameRate: 24,
-            repeat: -1,
-        });
 
-        let left = this.physics.add.sprite((this.cameras.main.width / 4), (this.cameras.main.height / 4) - 68 + margin, "cherry");
+        let left = this.physics.add.sprite((this.cameras.main.width / 2), (this.cameras.main.height / 4) - 68 + margin, "cherry");
         left.setDisplaySize(200,136);
         left.play("cherry-left");
-        
-        let right = this.physics.add.sprite((3 * this.cameras.main.width / 4) , (this.cameras.main.height / 4) - 68 + margin, "golden");
-        right.setDisplaySize(200,136);
-        right.play("golden-left");
 
         const winText = this.add.text(0,0,
             'You Did It!',
@@ -69,11 +59,11 @@ export class LevelTransition extends Phaser.Scene {
         );
         winText.setPosition(
             (this.cameras.main.width / 2) - winText.displayWidth/2,
-            (this.cameras.main.height / 4) - winText.displayHeight/2,
+            (this.cameras.main.height / 3) - winText.displayHeight/2,
         );
 
         const nextLeveText = this.add.text(0,0,
-            'Press SPACE to start the next level',
+            'Press SPACE to start the NEXT LEVEL',
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
