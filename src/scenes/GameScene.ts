@@ -348,7 +348,7 @@ export class GameScene extends Phaser.Scene {
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
             e.play(eDefinition.assetType);
-            e.setSize(100,100);
+            e.setSize(90,90);
             e.refreshBody();
             this.enemies.push(e);
 
