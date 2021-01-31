@@ -47,6 +47,8 @@ export class GameScene extends Phaser.Scene {
     
     private arePlayersJoined: Boolean = false;
 
+    private playerCooldownMap: Map<Phaser.Physics.Arcade.Sprite, boolean> = new Map();
+
 
     // sound effects
     private oinks: Array<Phaser.Sound.BaseSound>;
@@ -81,7 +83,7 @@ export class GameScene extends Phaser.Scene {
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Anytime a dumb danger noodle cannot move in any direction or if it reaches
                 // a location divisible by 50, it chooses a new direction to move in randomly.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) ) {
                     const rando = Math.random();
                     if(rando < .25) {
                         e.setVelocityX(-300);
@@ -109,7 +111,7 @@ export class GameScene extends Phaser.Scene {
                 // Smart sneks move toward p1 in either the x or y dimension (randomly decided) if they
                 // cannot move any further in their current direction or if they reach a location divisble
                 // by 50.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) ) {
                     if(Math.random() > .5) {
                         e.setVelocityY(0);
                         const dx = e.x - this.p1.x;
@@ -296,6 +298,9 @@ export class GameScene extends Phaser.Scene {
         this.playerToKeys.set(this.p1, this.p1Keys);
         this.playerToKeys.set(this.p2, this.p2Keys);
 
+        this.playerCooldownMap.set(this.p1, false);
+        this.playerCooldownMap.set(this.p2, false);
+
         [this.p1, this.p2].forEach(p => p.setCollideWorldBounds(true));
 
         this.createCrib();
@@ -396,12 +401,15 @@ export class GameScene extends Phaser.Scene {
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
             e.play(eDefinition.assetType);
-            e.setSize(90,90);
+            e.setSize(90,90 );
             e.refreshBody();
             this.enemies.push(e);
 
             // Pair the enemy object with its definition
             this.enemiesToDefintions.set(e, eDefinition);
+
+            this.physics.add.overlap(e, this.p1, () => this.takeDamage(this.p1));
+            this.physics.add.overlap(e, this.p2, () => this.takeDamage(this.p2));
         });
     }
 
@@ -425,6 +433,36 @@ export class GameScene extends Phaser.Scene {
         }
     }
 
+    isCoolingDown(player) {
+        return this.playerCooldownMap.get(player);
+    }
+
+    takeDamage(player) {
+        if(this.isCoolingDown(player)) {
+            return;
+        }
+        else {
+            this.playerCooldownMap.set(player, true);
+
+            this.tweens.add({
+                targets: player,
+                alpha: {
+                    from: 0,
+                    to: 1,
+                },
+                duration: 100,
+                repeat: 1,
+                yoyo: true,
+                onComplete: () => {
+                    player.alpha = 1;
+                    this.playerCooldownMap.set(player, false);
+                }
+            });
+
+            
+            console.log("hit");
+        }
+    }
 
     pickupKid(kid, parent) {
         if(!kid.isHeld) {
@@ -560,6 +598,12 @@ export class GameScene extends Phaser.Scene {
                     ));
                 }
             })
+        }
+
+        if(this.isCoolingDown(this.p1)) {
+            console.log("cooling down");
+        } else {
+            console.log("-")
         }
         
         this.kids.forEach(kid => kid.update());
