@@ -1,4 +1,5 @@
 import { GameScene } from "../scenes/GameScene";
+import { MapBuilder } from "../scenes/MapBuilder";
 
 export interface ITile {
     i: string;
@@ -10,15 +11,24 @@ export class GameMap extends Phaser.GameObjects.Container {
     // Contains all the children. Used for "collision" detections
     //private children: FubarObject[];
 
+    public TILE_SIZE: number = 50;
+
     public wallGroup: Phaser.Physics.Arcade.StaticGroup;
+
+    public tiles;
+
+    public isBuilding: boolean;
 
     private tileGroup: Phaser.GameObjects.Group;
 
-    constructor(scene: Phaser.Scene, x: number, y: number) {
+
+    constructor(scene: Phaser.Scene, x: number, y: number, isBuilding: boolean = false) {
 
         // all rooms shall use this
         super(scene, x, y, []);
         //this.children = [];
+
+        this.isBuilding = isBuilding;
 
         //this.setSize(300, 200);
 
@@ -26,8 +36,7 @@ export class GameMap extends Phaser.GameObjects.Container {
 
         this.wallGroup = this.scene.physics.add.staticGroup();
         this.loadTiles();
-        this.loadWalls();
-        this.wallGroup.toggleVisible();
+        //this.loadWalls();
     }
 
     update(): void {
@@ -39,6 +48,7 @@ export class GameMap extends Phaser.GameObjects.Container {
         wall.setOrigin(0);
         wall.setDisplaySize(props.w, props.h);
         wall.refreshBody();
+        wall.setVisible(false);
         return wall;
     }
 
@@ -49,44 +59,107 @@ export class GameMap extends Phaser.GameObjects.Container {
 
     createTileWall(x, y, horizontal=false) {
         let wall = this.scene.physics.add.staticImage(x, y, 'red-square');
-        wall.setDisplaySize(!horizontal ? 5 : 100, !horizontal ? 100 : 5);
+        wall.setDisplaySize(!horizontal ? 5 : this.TILE_SIZE, !horizontal ? this.TILE_SIZE : 5);
         wall.refreshBody();
         this.wallGroup.add(wall);
+        wall.setVisible(false);
+        return wall;
+    }
+
+    createTileWalls(tile, tileConfig) {
+        let offset = (this.TILE_SIZE / 2) - 2;
+        if (tileConfig.b.includes('l')){
+            tile.walls.push(this.createTileWall(tileConfig.x-offset, tileConfig.y));
+        }
+        if (tileConfig.b.includes('t')){
+            tile.walls.push(this.createTileWall(tileConfig.x, tileConfig.y-offset, true));
+        }
+        if (tileConfig.b.includes('r')){
+            tile.walls.push(this.createTileWall(tileConfig.x+offset, tileConfig.y));
+        }
+        if (tileConfig.b.includes('b')){
+            tile.walls.push(this.createTileWall(tileConfig.x, tileConfig.y+offset, true));
+        }
     }
 
     layTile(tileConfig, x, y) {
-        if (!tileConfig.i)
-            return null;
-        let tile: Phaser.GameObjects.Image = this.tileGroup.create(x, y, tileConfig.i);
+        let tile = this.tileGroup.create(x, y, tileConfig.i);
 
-        // handle collision here too?
+        tileConfig.x = x;
+        tileConfig.y = y;
+        tile.tileConfig = tileConfig;
+
+        // handle collision
+        tile.walls = [];
         if (tileConfig.b) {
-            if (tileConfig.b.includes('l')){
-                this.createTileWall(x-47, y)
-            }
-            if (tileConfig.b.includes('t')){
-                this.createTileWall(x, y-47, true)
-            }
-            if (tileConfig.b.includes('r')){
-                this.createTileWall(x+47, y)
-            }
-            if (tileConfig.b.includes('b')){
-                this.createTileWall(x, y+47, true)
-            }
+            this.createTileWalls(tile, tileConfig);
         }
 
         tile.setRotation(tileConfig.r * Math.PI/2 || 0);
+        tile.setDisplaySize(this.TILE_SIZE, this.TILE_SIZE);
+
+        if (this.isBuilding) {
+            tile.setInteractive();
+            tile.on('pointerdown',  this.clickTile, tile);
+        }
+
         return tile;
     }
 
+
+    clickTile(a) {
+        let tileConfig = (this as any).tileConfig;
+
+        let gameMap = (((this as any).scene as MapBuilder).gameMap as GameMap)
+        let walls = (this as any).walls;
+
+        if (a.leftButtonDown()) {
+            // Check to see if arrow keys are down to set walls
+            let arrowKeys = ((this as any).scene as MapBuilder)['p2Keys'];
+            let dirs = [arrowKeys[0].isDown, arrowKeys[1].isDown, arrowKeys[2].isDown, arrowKeys[3].isDown]
+            if (dirs.includes(true)) {
+                // remove walls
+                walls.forEach(wall => wall.destroy());
+
+                tileConfig.b = dirs.map((isDown, index) => isDown ? ['t','b','l','r'][index] : '').join('');
+                gameMap.createTileWalls(this, tileConfig);
+            } else {
+                // If not setting walls, we're cycling through images
+                let keys = ['vl1', 'vl2', 'vr1', 'vr2', 'vs', 'nw1', 'nw2', 'blank'];
+                tileConfig.i=  keys[(keys.indexOf((this as any).texture.key) + 1) % keys.length];
+                (this as any).setTexture(tileConfig.i);
+                this.setDisplaySize(gameMap.TILE_SIZE, gameMap.TILE_SIZE);
+            }
+        } else if (a.backButtonDown()) {
+            // rotating
+            tileConfig.r = (tileConfig.r + 1) % 4;
+            this.setRotation(tileConfig.r * Math.PI/2 || 0);
+        } else if (a.forwardButtonDown()) {
+            // remove walls
+            walls.forEach(wall => wall.destroy());
+            tileConfig.b = '';
+        }
+    }
+
     layTileRow(row: Array<any>, rowIndex) {
-        row.map((tileConfig, tileIndex) => this.layTile(tileConfig, (tileIndex * 100) + 50, (rowIndex * 100) + 50));
+        return row.map((tileConfig, tileIndex) => this.layTile(tileConfig, (tileIndex * this.TILE_SIZE) + this.TILE_SIZE/2, (rowIndex * this.TILE_SIZE) + this.TILE_SIZE/2));
     }
 
     loadTiles() {
         this.tileGroup = this.scene.add.group();
-        let tilesConfig = this.scene.cache.json.get('tiles');
-        tilesConfig.map((row, rowIndex) => this.layTileRow(row, rowIndex));
+        let conifigKey = this.isBuilding ? 'newMap' : 'tiles';
+        let tilesConfig = this.scene.cache.json.get(conifigKey);
+        if (tilesConfig.tiles) {
+            this.tiles = tilesConfig.tiles.map((row, rowIndex) => this.layTileRow(row, rowIndex));
+        } else {
+            this.tiles = [];
+            for (let rowIndex = 0; rowIndex < tilesConfig.dimensions.height; rowIndex++) {
+                let row = [];
+                for (let colIndex = 0; colIndex < tilesConfig.dimensions.width; colIndex++) {
+                    row.push(this.layTile({i:'blank',r:0,b:''}, (colIndex * this.TILE_SIZE) + this.TILE_SIZE/2, (rowIndex * this.TILE_SIZE) + this.TILE_SIZE/2));
+                }
+                this.tiles.push(row);
+            }
+        }
     }
-    
 }

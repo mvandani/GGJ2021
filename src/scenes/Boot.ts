@@ -47,6 +47,7 @@ export class Boot extends Phaser.Scene {
         // layout
         this.load.json('walls', './assets/walls.json');
         this.load.json('tiles', './assets/tiles.json');
+        this.load.json('newMap', './assets/newMap.json');
     }
 
     update() {

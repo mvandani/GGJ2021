@@ -26,10 +26,8 @@ export class MapBuilder extends Phaser.Scene {
     private p2Keys: Object;
     private allowKeyInput: Boolean = true;
 
-    private wallGroup: Phaser.Physics.Arcade.StaticGroup;
 
-    private tileGroup: Phaser.GameObjects.Group;
-    private gameMap:GameMap;
+    public gameMap:GameMap;
 
     constructor() {
         super({
@@ -59,10 +57,14 @@ export class MapBuilder extends Phaser.Scene {
             [Controls.LEFT]: Phaser.Input.Keyboard.KeyCodes.LEFT,
             [Controls.RIGHT]: Phaser.Input.Keyboard.KeyCodes.RIGHT,
         });
+
+        this.input.keyboard.addListener('keydown-SPACE', event => {
+            console.log(JSON.stringify(this.gameMap.tiles.map(row => row.map(tile => tile.tileConfig))));
+        });
     }
 
     create(): void {
-        this.gameMap = new GameMap(this,0,0);
+        this.gameMap = new GameMap(this,0,0, true);
 
     }
 

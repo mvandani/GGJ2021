@@ -72,14 +72,15 @@ export class GameScene extends Phaser.Scene {
         this.gameMap = new GameMap(this,0,0);
 
         this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
-        this.p1.setDisplaySize(75,75);
+        this.p1.setDisplaySize(25,25);
 
         this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
-        this.p2.setDisplaySize(75,75);
+        this.p2.setDisplaySize(25,25);
 
 
         this.physics.add.collider(this.p1, this.gameMap.wallGroup);
         this.physics.add.collider(this.p2, this.gameMap.wallGroup);
+
 
 
 
