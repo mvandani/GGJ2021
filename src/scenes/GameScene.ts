@@ -367,8 +367,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     pickupKid(kid, parent) {
-        console.log(kid, parent)
-        
+        if(!kid.isHeld) {
+            kid.isHeld = true;
+            this.oinks[0].play();
+            if(!parent.kids)
+                parent.kids = [];
+            parent.kids.push(kid);
+        }
     }
 
     createKids(): void {
@@ -384,6 +389,7 @@ export class GameScene extends Phaser.Scene {
             this.add.existing(kid);
             this.physics.add.collider(kid, this.gameMap.wallGroup);
             this.physics.add.overlap(kid, this.p1, this.pickupKid.bind(this));
+            this.physics.add.overlap(kid, this.p2, this.pickupKid.bind(this));
             this.kids.push(kid);
         });
     }
@@ -482,6 +488,17 @@ export class GameScene extends Phaser.Scene {
                     this.p1.setDepth(101);
                 }
             }
+            
+            [this.p1, this.p2].forEach((p: any) => {
+                if(p.kids){
+                    let followerOffsetX = 10;
+                    let followerOffsetY = -10;
+                    p.kids.forEach(kid => kid.setPosition(
+                        p.x + followerOffsetX,
+                        p.y + followerOffsetY
+                    ));
+                }
+            })
         }
         
         this.kids.forEach(kid => kid.update());
