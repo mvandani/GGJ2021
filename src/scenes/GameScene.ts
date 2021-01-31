@@ -55,6 +55,8 @@ export class GameScene extends Phaser.Scene {
 
     // A map of enemy Images to enemyDefinitions (see below)
     private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
+    
+    private levelConfig: Object;
 
     // A lookup of enemy type enums to objects defining a type of enemy, which includes:
     // - Its asset type for this.physics.add.image
@@ -133,6 +135,7 @@ export class GameScene extends Phaser.Scene {
         this.fading = true;
 
         this.level = data.level;
+        this.levelConfig = this.cache.json.get(this.level);
 
         this.p1Keys = this.input.keyboard.addKeys({
             [Controls.UP]: Phaser.Input.Keyboard.KeyCodes.W,
@@ -177,10 +180,12 @@ export class GameScene extends Phaser.Scene {
             repeat: -1,
         });
 
-        this.p1 = this.physics.add.sprite(300, 600, "cherry");
+        const p1Start = this.levelConfig["player1"]["start"];
+        const p2Start = this.levelConfig["player2"]["start"];
+        this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 25, p1Start[1] * 100 + 25, "cherry");
         this.p1.play("cherry-left");
         
-        this.p2 = this.physics.add.sprite(700, 600, "golden");
+        this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 25, p2Start[1] * 100 + 25, "golden");
         this.p2.play("golden-left");
 
         
@@ -308,16 +313,13 @@ export class GameScene extends Phaser.Scene {
     }
 
     createKids(): void {
-        const kidBehaviors = [0, 1, 1, 1, 2];
-
-        kidBehaviors.forEach(behaviorCode => {
-
+        this.levelConfig["kids"].forEach(kidConfig => {
             const kid = new Kid({
                 scene: this,
-                x: Math.floor(Math.random() * 15) * 100 + 25,
-                y: Math.floor(Math.random() * 9) * 100 + 25,
+                x: kidConfig['start'][0] * 100 + 25,
+                y: kidConfig['start'][1] * 100 + 25,
                 key: 'kid',
-                behaviorCode: behaviorCode
+                behaviorCode: kidConfig['behavior']
             });
             
             this.add.existing(kid);
