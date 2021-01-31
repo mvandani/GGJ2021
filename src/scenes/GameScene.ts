@@ -453,7 +453,7 @@ export class GameScene extends Phaser.Scene {
             return;
         }
         else {
-            this.squeaks[Math.floor(Math.random() * Math.floor(3))].play();
+            this.squeaks[Math.floor(Math.random() * Math.floor(2))].play();
             this.playerCooldownMap.set(player, true);
 
             this.tweens.add({
