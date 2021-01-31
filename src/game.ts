@@ -9,14 +9,14 @@ import { MapBuilder } from './scenes/MapBuilder';
 // main game configuration
 const config: GameConfig = {
   title: 'GGJ2021',
-  width: 1000,
+  width: 1500,
   height: 1000,
   type: Phaser.WEBGL,
   parent: 'game',
   scene: [Boot, MainMenu, GameScene, MapBuilder],
   input: {
     keyboard: true,
-    mouse: false,
+    mouse: true,
     touch: false,
     gamepad: false
   },

@@ -80,6 +80,11 @@
                 "type": "image",
                 "key": "nw2",
                 "url": "assets/images/nowalls2.png"
+            },
+            {
+                "type": "image",
+                "key": "blank",
+                "url": "assets/images/blank.png"
             }
         ]
     }
