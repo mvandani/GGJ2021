@@ -457,7 +457,7 @@ export class GameScene extends Phaser.Scene {
                     to: 1,
                 },
                 duration: 100,
-                repeat: 2,
+                repeat: 5,
                 yoyo: true,
                 onComplete: () => {
                     player.alpha = 1;
