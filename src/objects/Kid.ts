@@ -1,5 +1,5 @@
 export class Kid extends Phaser.GameObjects.Sprite {
-    protected behaviorCode: integer; // 0: stand still, 1: wander, 2: run in circles
+    public behaviorCode: integer; // 0: stand still, 1: wander, 2: run in circles
     protected direction: number;
     protected speed: number;
 

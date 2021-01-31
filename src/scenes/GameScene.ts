@@ -366,6 +366,24 @@ export class GameScene extends Phaser.Scene {
         });
     }
 
+
+    kidInCrib(kid, crib) {
+            this.oinks[0].play();
+            if ((this.p1 as any).kids) {
+                let kidIndex = (this.p1 as any).kids.indexOf(kid);
+                if (kidIndex > -1) {
+                    (this.p1 as any).kids.splice(kidIndex, 1);
+                }
+            }
+            if ((this.p2 as any).kids) {
+                let kidIndex = (this.p2 as any).kids.indexOf(kid);
+                if (kidIndex > -1)
+                    (this.p2 as any).kids.splice(kidIndex, 1);
+            }
+            kid.behaviorCode = 0;
+    }
+
+
     pickupKid(kid, parent) {
         if(!kid.isHeld) {
             kid.isHeld = true;
@@ -390,6 +408,7 @@ export class GameScene extends Phaser.Scene {
             this.physics.add.collider(kid, this.gameMap.wallGroup);
             this.physics.add.overlap(kid, this.p1, this.pickupKid.bind(this));
             this.physics.add.overlap(kid, this.p2, this.pickupKid.bind(this));
+            this.physics.add.overlap(kid, this.crib, this.kidInCrib.bind(this));
             this.kids.push(kid);
         });
     }
