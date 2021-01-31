@@ -16,6 +16,7 @@ export class Kid extends Phaser.GameObjects.Sprite {
         this.behaviorCode = params.behaviorCode;
         this.speed = 0;
         this.direction = 0;
+        this.setDepth(800);
 
         // physics
         params.scene.physics.world.enable(this);
