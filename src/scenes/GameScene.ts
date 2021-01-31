@@ -613,13 +613,21 @@ export class GameScene extends Phaser.Scene {
 
     private runGame() {
 
+        let nextLevel = this.LEVELS[this.LEVELS.indexOf(this.level) + 1];
         if (Phaser.Input.Keyboard.JustDown(this.skipLevelKey)) {
-            let nextLevel = this.LEVELS[this.LEVELS.indexOf(this.level) + 1];
             if (nextLevel) {
                 this.scene.start('LevelTransition', {nextLevel: nextLevel});
             } else {
                 this.scene.start('Victory');
             }
+        }
+
+        let over = true;
+        for (let i = 0; i < this.kids.length; i++) {
+            over = over && (this.kids[i] as any).inCrib;
+        }
+        if (over) {
+            this.scene.start('LevelTransition', {nextLevel: nextLevel});
         }
         /*
         switch (this.state) {
