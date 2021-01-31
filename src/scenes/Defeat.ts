@@ -7,6 +7,7 @@ export class Defeat extends Phaser.Scene {
     private mainMenuKey: Phaser.Input.Keyboard.Key;
     private fading: boolean;
     private nextLevel: string;
+    private music: Phaser.Sound.BaseSound;
 
     constructor() {
         super({
@@ -83,6 +84,8 @@ export class Defeat extends Phaser.Scene {
             // this.music.stop();
             //this.scene.start('GameScene');
         });
+        this.music = this.sound.add('deathsong', {loop: false, volume: 1});
+        this.music.play();
 
         //this.scene.start('GameScene');
     }
@@ -91,6 +94,7 @@ export class Defeat extends Phaser.Scene {
         // If fadig is complete, listen for a key input and begin fading out
         if (!this.fading) {
             if (Phaser.Input.Keyboard.JustDown(this.mainMenuKey)) {
+                this.music.stop();
                 this.scene.switch('MainMenu');
             }
         }
