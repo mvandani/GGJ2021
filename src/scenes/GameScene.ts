@@ -79,6 +79,7 @@ export class GameScene extends Phaser.Scene {
     private points: integer;
     private lives: integer;
 
+    private totalScore: integer;
     // A lookup of enemy type enums to objects defining a type of enemy, which includes:
     // - Its asset type for this.physics.add.image
     // - Its update function, which is called each frame
@@ -172,6 +173,8 @@ export class GameScene extends Phaser.Scene {
         this.timeSpent = 0;
         this.points = 0;
         this.lives = 3;
+
+        this.totalScore = data.totalScore;
 
         this.p1Keys = this.input.keyboard.addKeys({
             [Controls.UP]: Phaser.Input.Keyboard.KeyCodes.W,
@@ -622,10 +625,10 @@ export class GameScene extends Phaser.Scene {
         if (Phaser.Input.Keyboard.JustDown(this.skipLevelKey)) {
             if (nextLevel) {
                 this.music.stop();
-                this.scene.start('LevelTransition', {nextLevel: nextLevel});
+                this.scene.start('LevelTransition', {nextLevel: nextLevel, levelScore: this.points, totalScore: (this.totalScore || 0) + this.points});
             } else {
                 this.music.stop();
-                this.scene.start('Victory');
+                this.scene.start('Victory', {levelScore: this.points, totalScore: (this.totalScore || 0) + this.points});
             }
         }
 
@@ -636,16 +639,16 @@ export class GameScene extends Phaser.Scene {
         if (over) {
             if (nextLevel) {
                 this.music.stop();
-                this.scene.start('LevelTransition', {nextLevel: nextLevel});
+                this.scene.start('LevelTransition', {nextLevel: nextLevel, levelScore: this.points, totalScore: (this.totalScore || 0) + this.points});
             } else {
                 this.music.stop();
-                this.scene.start('Victory');
+                this.scene.start('Victory', {levelScore: this.points, totalScore: (this.totalScore || 0) + this.points});
             }
         }
 
         if(this.lives == 0) {
             this.music.stop();
-            this.scene.start('Defeat');
+            this.scene.start('Defeat', {levelScore: this.points, totalScore: (this.totalScore || 0) + this.points});
         }
         /*
         switch (this.state) {

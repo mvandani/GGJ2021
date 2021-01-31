@@ -7,6 +7,8 @@ export class Victory extends Phaser.Scene {
     private mainMenuKey: Phaser.Input.Keyboard.Key;
     private fading: boolean;
     private nextLevel: string;
+    private score: integer;
+    private totalScore
 
     constructor() {
         super({
@@ -18,6 +20,8 @@ export class Victory extends Phaser.Scene {
         this.mainMenuKey = this.input.keyboard.addKey(
             Phaser.Input.Keyboard.KeyCodes.SPACE
         );
+        this.score = data.levelScore;
+        this.totalScore = data.totalScore;
         this.mainMenuKey.isDown = false;
         this.fading = false;
         this.nextLevel = data.nextLevel;
@@ -70,6 +74,32 @@ export class Victory extends Phaser.Scene {
         winText.setPosition(
             (this.cameras.main.width / 2) - winText.displayWidth/2,
             (this.cameras.main.height / 4) - winText.displayHeight/2,
+        );
+
+        const scoreText = this.add.text(0,0,
+            'Level Score: ' + this.score,
+            {
+                fontFamily: 'Potta One',
+                fontSize: 30,
+                color: '#836767'
+            }
+        );
+        scoreText.setPosition(
+            (this.cameras.main.width / 2) - scoreText.displayWidth/2,
+            (this.cameras.main.height / 3) - scoreText.displayHeight/2 + 50,
+        );
+        
+        const totalScoreText = this.add.text(0,0,
+            'Total Score: ' + this.totalScore,
+            {
+                fontFamily: 'Potta One',
+                fontSize: 24,
+                color: '#836767'
+            }
+        );
+        totalScoreText.setPosition(
+            (this.cameras.main.width / 2) - totalScoreText.displayWidth/2,
+            (this.cameras.main.height / 3) - totalScoreText.displayHeight/2 + 80,
         );
 
         const nextLeveText = this.add.text(0,0,
