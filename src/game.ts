@@ -58,7 +58,7 @@ const config: GameConfig = {
     default: 'arcade',
     arcade: {
       //gravity: { y: 300 },
-      debug: true
+      debug: false
     }
   },
   backgroundColor: '#fff',
