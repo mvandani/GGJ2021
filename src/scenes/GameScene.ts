@@ -73,6 +73,7 @@ export class GameScene extends Phaser.Scene {
     private timerText;
     private livesText;
     private timeSpent: integer;
+    private points: integer;
 
     // A lookup of enemy type enums to objects defining a type of enemy, which includes:
     // - Its asset type for this.physics.add.image
@@ -165,6 +166,7 @@ export class GameScene extends Phaser.Scene {
         this.level = data.level;
         this.levelConfig = this.cache.json.get(this.level);
         this.timeSpent = 0;
+        this.points = 0;
 
         this.p1Keys = this.input.keyboard.addKeys({
             [Controls.UP]: Phaser.Input.Keyboard.KeyCodes.W,
@@ -430,6 +432,8 @@ export class GameScene extends Phaser.Scene {
                     (this.p2 as any).kids.splice(kidIndex, 1);
             }
             kid.behaviorCode = 0;
+            this.points += 10 + Math.max(0, 30 - this.timeSpent);
+            this.scoreText.setText("Points: " + this.points);
         }
     }
 
