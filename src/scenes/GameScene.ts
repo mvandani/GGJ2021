@@ -47,6 +47,11 @@ export class GameScene extends Phaser.Scene {
     
     private arePlayersJoined: Boolean = false;
 
+
+    // sound effects
+    private oinks: Array<Phaser.Sound.BaseSound>;
+    private squeaks: Array<Phaser.Sound.BaseSound>;
+
     // The player that is leading the other. null if they are separated
     private leader: Phaser.Physics.Arcade.Sprite;
 
@@ -170,6 +175,10 @@ export class GameScene extends Phaser.Scene {
             frameRate: 6,
             repeat: -1,
         });
+
+
+        this.oinks = ['oink1', 'oink2', 'oink3'].map(oink => this.sound.add(oink, {volume: 1.5}));
+        this.squeaks = ['squeak1', 'squeak2'].map(squeak => this.sound.add(squeak, {volume: 1.5}));
     }
 
     create(): void {
@@ -326,6 +335,11 @@ export class GameScene extends Phaser.Scene {
         });
     }
 
+    pickupKid(kid, parent) {
+        console.log(kid, parent)
+        
+    }
+
     createKids(): void {
         this.levelConfig["kids"].forEach(kidConfig => {
             const kid = new Kid({
@@ -338,6 +352,7 @@ export class GameScene extends Phaser.Scene {
             
             this.add.existing(kid);
             this.physics.add.collider(kid, this.gameMap.wallGroup);
+            this.physics.add.overlap(kid, this.p1, this.pickupKid.bind(this));
             this.kids.push(kid);
         });
     }

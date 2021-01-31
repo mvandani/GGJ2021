@@ -104,6 +104,32 @@
                 "type": "image",
                 "key": "blank",
                 "url": "assets/images/blank.png"
+            },
+
+            {
+                "type": "audio",
+                "key": "oink1",
+                "url": "assets/sound/Oink1.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "oink2",
+                "url": "assets/sound/Oink2.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "oink3",
+                "url": "assets/sound/oinks4.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "squeak1",
+                "url": "assets/sound/squeak1.mp3"
+            },
+            {
+                "type": "audio",
+                "key": "squeak2",
+                "url": "assets/sound/squeak2.mp3"
             }
         ]
     }
