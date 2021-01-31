@@ -103,6 +103,11 @@
             },
             {
                 "type": "image",
+                "key": "brown",
+                "url": "assets/images/brown.png"
+            },
+            {
+                "type": "image",
                 "key": "blank",
                 "url": "assets/images/blank.png"
             }

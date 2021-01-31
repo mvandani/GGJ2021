@@ -29,6 +29,9 @@ export class GameMap extends Phaser.GameObjects.Container {
         // all rooms shall use this
         super(scene, x, y, []);
         //this.children = [];
+        let brown = this.scene.add.image(750,450,'brown');
+        brown.setSize(1500, 900);
+        brown.setDisplaySize(1500, 900);
 
         this.mapKey = mapKey;
         this.isBuilding = isBuilding;
