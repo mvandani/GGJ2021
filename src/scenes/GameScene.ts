@@ -31,6 +31,8 @@ export class GameScene extends Phaser.Scene {
     // Game state
     private state: GameState;
 
+    private level: string;
+
     private p1Keys: Object;
     private p2Keys: Object;
     private allowKeyInput: Boolean = true;
@@ -122,11 +124,13 @@ export class GameScene extends Phaser.Scene {
         console.log("Preloading");
     }
 
-    init(): void {
+    init(data): void {
         // Starting level
         this.state = GameState.STARTING_LEVEL;
         // starts fading
         this.fading = true;
+
+        this.level = data.level;
 
         this.p1Keys = this.input.keyboard.addKeys({
             [Controls.UP]: Phaser.Input.Keyboard.KeyCodes.W,
@@ -144,7 +148,7 @@ export class GameScene extends Phaser.Scene {
 
     create(): void {
 
-        this.gameMap = new GameMap(this,0,0,'level1');
+        this.gameMap = new GameMap(this,0,0,this.level);
 
         this.anims.create({
             key: "cherry-left",
