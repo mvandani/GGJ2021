@@ -14,22 +14,42 @@
 
             {
                 "type": "spritesheet",
-                "key": "cherry",
-                "url": "assets/images/cherry-walk.png",
+                "key": "cherry-idle",
+                "url": "assets/images/cherry-idle.png",
                 "frameConfig": {
-                    "frameWidth": 417,
-                    "frameHeight": 288
+                    "frameWidth": 100,
+                    "frameHeight": 69
                 }
             },
             {
                 "type": "spritesheet",
-                "key": "golden",
+                "key": "cherry-walk",
                 "url": "assets/images/cherry-walk.png",
                 "frameConfig": {
-                    "frameWidth": 417,
-                    "frameHeight": 288
+                    "frameWidth": 100,
+                    "frameHeight": 69
                 }
             },
+            
+            {
+                "type": "spritesheet",
+                "key": "golden-idle",
+                "url": "assets/images/golden-idle.png",
+                "frameConfig": {
+                    "frameWidth": 100,
+                    "frameHeight": 69
+                }
+            },
+            {
+                "type": "spritesheet",
+                "key": "golden-walk",
+                "url": "assets/images/golden-walk.png",
+                "frameConfig": {
+                    "frameWidth": 100,
+                    "frameHeight": 69
+                }
+            },
+
             {
                 "type": "image",
                 "key": "snake-01",
@@ -39,6 +59,24 @@
                 "type": "image",
                 "key": "snake-02",
                 "url": "assets/images/snake-02.png"
+            },
+            {
+                "type": "spritesheet",
+                "key": "snake-03",
+                "url": "assets/images/snake-03.png",
+                "frameConfig": {
+                    "frameWidth": 60,
+                    "frameHeight": 100
+                }
+            },
+            {
+                "type": "spritesheet",
+                "key": "snake-04",
+                "url": "assets/images/snake-04.png",
+                "frameConfig": {
+                    "frameWidth": 60,
+                    "frameHeight": 100
+                }
             },
 
             {

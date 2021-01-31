@@ -54,12 +54,12 @@ export class GameScene extends Phaser.Scene {
 
     private gameMap:GameMap;
 
-    private enemies: Array<Phaser.Physics.Arcade.Image> = [];
+    private enemies: Array<Phaser.Physics.Arcade.Sprite> = [];
     private kids: Array<Phaser.GameObjects.Sprite> = [];
     private crib: Phaser.Physics.Arcade.Image;
 
     // A map of enemy Images to enemyDefinitions (see below)
-    private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
+    private enemiesToDefintions: Map<Phaser.Physics.Arcade.Sprite, any> = new Map();
     
     private levelConfig: Object;
 
@@ -68,7 +68,7 @@ export class GameScene extends Phaser.Scene {
     // - Its update function, which is called each frame
     private enemyDefinitions: Object = {
         [EnemyTypes.DUMB_DANGER_NOODLE]: {
-            assetType: "snake-01",
+            assetType: "snake-03",
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Anytime a dumb danger noodle cannot move in any direction or if it reaches
                 // a location divisible by 50, it chooses a new direction to move in randomly.
@@ -91,7 +91,7 @@ export class GameScene extends Phaser.Scene {
             }
         },
         [EnemyTypes.SMART_SNEK]: {
-            assetType: "snake-02",
+            assetType: "snake-04",
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Smart sneks move toward p1 in either the x or y dimension (randomly decided) if they
                 // cannot move any further in their current direction or if they reach a location divisble
@@ -177,35 +177,62 @@ export class GameScene extends Phaser.Scene {
         this.gameMap = new GameMap(this,0,0,this.level);
 
         this.anims.create({
-            key: "cherry-left",
-            frames: this.anims.generateFrameNumbers("cherry", {start: 0, end: 7}),
+            key: "cherry-idle",
+            frames: this.anims.generateFrameNumbers("cherry-idle", {start: 0, end: 1}),
+            frameRate: 12,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "cherry-walk",
+            frames: this.anims.generateFrameNumbers("cherry-walk", {start: 0, end: 6}),
             frameRate: 24,
             repeat: -1,
         });
-        const left = this.anims.create({
-            key: "golden-left",
-            frames: this.anims.generateFrameNumbers("golden", {start: 0, end: 7}),
+        this.anims.create({
+            key: "golden-idle",
+            frames: this.anims.generateFrameNumbers("golden-walk", {start: 0, end: 1}),
+            frameRate: 12,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "golden-walk",
+            frames: this.anims.generateFrameNumbers("golden-walk", {start: 0, end: 6}),
             frameRate: 24,
             repeat: -1,
         });
+        this.anims.create({
+            key: "snake-03",
+            frames: this.anims.generateFrameNumbers("snake-03", {start: 0, end: 10}),
+            frameRate: 24,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "snake-04",
+            frames: this.anims.generateFrameNumbers("snake-04", {start: 0, end: 10}),
+            frameRate: 24,
+            repeat: -1,
+        })
 
         const p1Start = this.levelConfig["player1"]["start"];
         const p2Start = this.levelConfig["player2"]["start"];
         this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 12, p1Start[1] * 100 + 25, "cherry");
-        this.p1.setOrigin(0, 0);
-        this.p1.play("cherry-left");
+        //this.p1.setOrigin(0, 0);
+        this.p1.play("cherry-walk");
         
         this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 12, p2Start[1] * 100 + 25, "golden");
-        this.p2.setOrigin(0, 0);
-        this.p2.play("golden-left");
-
+        //this.p2.setOrigin(0, 0);
+        this.p2.play("golden-walk");
         
 
         //this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
         this.p1.setDisplaySize(75,51);
+        this.p1.setSize(75, 51);
+        this.p2.refreshBody();
 
         //this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
         this.p2.setDisplaySize(75,51);
+        this.p2.setSize(75, 51);
+        this.p2.refreshBody();
 
 
         this.physics.add.collider(this.p1, this.gameMap.wallGroup);
@@ -217,9 +244,9 @@ export class GameScene extends Phaser.Scene {
 
         [this.p1, this.p2].forEach(p => p.setCollideWorldBounds(true));
 
+        this.createCrib();
         this.createKids();
         this.createEnemies();
-        this.createCrib();
         
         // Listen for events from obejcts
         this.events.addListener('event', () => {
@@ -313,10 +340,11 @@ export class GameScene extends Phaser.Scene {
             // Get the definition for this type of enemy
             const eDefinition = this.enemyDefinitions[enemyType];
 
-            const e = this.physics.add.image(0,0, eDefinition.assetType);
-            e.setDisplaySize(50,50);
+            const e = this.physics.add.sprite(0,0, eDefinition.assetType);
+            e.setDisplaySize(60,100);
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
+            e.play(eDefinition.assetType);
             this.enemies.push(e);
 
             // Pair the enemy object with its definition
