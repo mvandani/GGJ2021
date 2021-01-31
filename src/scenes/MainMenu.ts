@@ -100,7 +100,7 @@ export class MainMenu extends Phaser.Scene {
                 //this.fading = true;
 
                 //this.scene.start('GameScene', {level: 'level1half'});
-                this.scene.start('LevelTransition', {nextLevel: 'level1half'});
+                this.scene.start('GameScene', {level: 'level1half'});
             } else if (Phaser.Input.Keyboard.JustDown(this.instructionsKey)) {
                 //let fadeOutDuration: number = 500;
                 //this.cameras.main.fadeOut(fadeOutDuration, 255, 255, 255);
