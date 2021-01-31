@@ -407,6 +407,8 @@ export class GameScene extends Phaser.Scene {
 
 
     kidInCrib(kid, crib) {
+        if(!kid.inCrib){
+            kid.inCrib = true;
             this.oinks[Math.floor(Math.random() * Math.floor(3))].play();
             if ((this.p1 as any).kids) {
                 let kidIndex = (this.p1 as any).kids.indexOf(kid);
@@ -420,6 +422,7 @@ export class GameScene extends Phaser.Scene {
                     (this.p2 as any).kids.splice(kidIndex, 1);
             }
             kid.behaviorCode = 0;
+        }
     }
 
 
