@@ -30,7 +30,7 @@ export class MainMenu extends Phaser.Scene {
 
     create() {
         // Load background image
-        // this.bg = this.add.sprite(0, 0, 'mainmenu-bg').setOrigin(0,0);
+        this.add.sprite(0, 0, 'title').setOrigin(0,0);
 
         // Default a default bg color
         this.cameras.main.setBackgroundColor(0x2c2727);
@@ -42,7 +42,7 @@ export class MainMenu extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         startText.setPosition(
@@ -55,7 +55,7 @@ export class MainMenu extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 24,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         instructionsText.setPosition(
@@ -68,7 +68,7 @@ export class MainMenu extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 24,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         creditsText.setPosition(

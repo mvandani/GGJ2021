@@ -24,7 +24,7 @@ export class Credits extends Phaser.Scene {
         // this.bg = this.add.sprite(0, 0, 'mainmenu-bg').setOrigin(0,0);
 
         // Default a default bg color
-        this.cameras.main.setBackgroundColor(0x2c2727);
+        this.cameras.main.setBackgroundColor(0x684738);
 
         const margin = 50;
 
@@ -33,7 +33,7 @@ export class Credits extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         jennyText.setPosition(
@@ -46,7 +46,7 @@ export class Credits extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         mvdText.setPosition(
@@ -59,7 +59,7 @@ export class Credits extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         shahrukhText.setPosition(
@@ -72,7 +72,7 @@ export class Credits extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 30,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         toddText.setPosition(
@@ -85,7 +85,7 @@ export class Credits extends Phaser.Scene {
             {
                 fontFamily: 'Potta One',
                 fontSize: 24,
-                color: '#836767'
+                color: '#ffe5c4'
             }
         );
         mainMenuText.setPosition(
