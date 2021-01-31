@@ -1,10 +1,33 @@
 /// <reference path='./headers/phaser.d.ts'/>
 
+/*
+)(:;;..                                                           :
+::::::::;.                                                    `.  :  .'
+ ):(;;;;`;;                                                     `m$$m
+'|:|:::::"_                                                   ''$$$$$$''
+ /_| ::::'                                                    .' `$$'`.
+:/  ::.;'          mdQQQb                                    '     :   `
+:|__/::'        ---- 4SSEO                                         :
+:(__/           \    \SSQ'                 __        ___   __
+::               \ \Y \Sp                 (\\)______(\|/)_(//)
+:L                \;\\_\                   |\\\\\\\\\\|/////|
+:|              .;'  \\               mmNmmmNNmmm\\\\\|/////|
+:|            .;'     \\            4OOOOOOOOOOOOOO\\\|///mm|
+:|          .;'        \\          dVVVVVVOOOOOOOOOOOOOOOOOVVV   mmmOOOOm
+:|  ____  .;'____       \\   ____ mmm ____ mOOOOVVVVVVVVVVVSSSSSSSSmmmOOOOm
+:| / / _\_L / /  \ ______\\_/_/__\__ / /  \ qVVVVVVVVVVVVVVVSSSSSSSSSmmmOOOM
+:|| | |____| | ++ |_________________| | ++ | VVVVVVVVVVVVVVVVSSSSSSSSSOOOOOOO
+_| \_\__/   \_\__/          \_\__/   \_\__/ dOOOOOOOOOOOOOVVVSSSSSSSSSOOOOOOO
+*/
+
 import 'phaser';
 import { Boot } from './scenes/Boot';
+import { Credits } from './scenes/Credits';
 import { MainMenu } from './scenes/MainMenu';
 import { GameScene } from './scenes/GameScene';
 import { MapBuilder } from './scenes/MapBuilder';
+import { Instructions } from './scenes/Instructions';
+
 
 // main game configuration
 const config: GameConfig = {
@@ -13,7 +36,14 @@ const config: GameConfig = {
   height: 900,
   type: Phaser.WEBGL,
   parent: 'game',
-  scene: [Boot, MainMenu, GameScene, MapBuilder],
+  scene: [
+    Boot,
+    MainMenu,
+    GameScene,
+    MapBuilder,
+    Instructions,
+    Credits,
+  ],
   input: {
     keyboard: true,
     mouse: true,

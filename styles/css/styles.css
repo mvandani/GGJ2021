@@ -5,8 +5,8 @@
 
 body {
     font-size: 10px;
-    color: black;
-    background-color: #3f3a3a;
+    color: #836767;
+    background-color: #352f2f;
 }
 
 .hidden {
@@ -43,8 +43,13 @@ body div.container div#game canvas {
 }
 
 header {
-    margin-bottom:.5em;
+    margin-bottom:.25em;
     font-size:24pt;
-    color:white;
+    text-shadow: 2px 2px black;
+    font-family: 'Potta One', sans-serif;
+}
+.byline {
+    margin-bottom: .5em;
+    font-size:18pt;
     font-family: sans-serif;
 }
