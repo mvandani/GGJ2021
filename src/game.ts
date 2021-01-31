@@ -29,6 +29,7 @@ import { MapBuilder } from './scenes/MapBuilder';
 import { Instructions } from './scenes/Instructions';
 import { LevelTransition } from './scenes/LevelTransition';
 import { Victory } from './scenes/Victory';
+import { Defeat } from './scenes/Defeat';
 
 
 // main game configuration
@@ -47,6 +48,7 @@ const config: GameConfig = {
     Credits,
     LevelTransition,
     Victory,
+    Defeat
   ],
   input: {
     keyboard: true,

@@ -648,6 +648,11 @@ export class GameScene extends Phaser.Scene {
             this.music.stop();
             this.scene.start('LevelTransition', {nextLevel: nextLevel});
         }
+
+        if(this.lives == 0) {
+            this.music.stop();
+            this.scene.start('Defeat');
+        }
         /*
         switch (this.state) {
             case GameState.STARTING_LEVEL:
