@@ -1,12 +1,16 @@
 /**
  * Main menu.
  */
+
+let playingMusic = false;
+
 export class MainMenu extends Phaser.Scene {
     private startKey: Phaser.Input.Keyboard.Key;
     private instructionsKey: Phaser.Input.Keyboard.Key;
     private creditsKey: Phaser.Input.Keyboard.Key;
     private texts: Phaser.GameObjects.Text[] = [];
     private fading: boolean;
+    private music: any;
 
     constructor() {
         super({
@@ -26,6 +30,13 @@ export class MainMenu extends Phaser.Scene {
         );
         this.startKey.isDown = false;
         this.fading = false;
+
+        // start playing music
+        if(!playingMusic) {
+            this.music = this.sound.add('gk', {loop: true, volume: 1});
+            this.music.play();
+            playingMusic = true;
+        }
     }
 
     create() {
@@ -78,10 +89,6 @@ export class MainMenu extends Phaser.Scene {
 
         this.texts = [startText, instructionsText, creditsText];
 
-        // start playing music
-        // this.music = this.sound.add('bg-music', {loop: true, volume: 1});
-        // this.music.play();
-
         // Listen for when the camera is done fading after a selection has been chosen
         this.cameras.main.once('camerafadeoutcomplete', (camera) => {
             // this.music.stop();
@@ -100,6 +107,8 @@ export class MainMenu extends Phaser.Scene {
                 //this.fading = true;
 
                 //this.scene.start('GameScene', {level: 'level1half'});
+                this.music.stop();
+                playingMusic = false;
                 this.scene.start('GameScene', {level: 'level1half'});
             } else if (Phaser.Input.Keyboard.JustDown(this.instructionsKey)) {
                 //let fadeOutDuration: number = 500;

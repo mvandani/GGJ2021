@@ -21,13 +21,13 @@ export class Credits extends Phaser.Scene {
 
     create() {
         // Load background image
-        // this.bg = this.add.sprite(0, 0, 'mainmenu-bg').setOrigin(0,0);
+        this.add.sprite(0, 0, 'credits').setOrigin(0,0);
 
         // Default a default bg color
         this.cameras.main.setBackgroundColor(0x684738);
 
         const margin = 50;
-
+        /*
         const jennyText = this.add.text(0,0,
             'Jenny Couture',
             {
@@ -92,7 +92,7 @@ export class Credits extends Phaser.Scene {
             (this.cameras.main.width / 2) - mainMenuText.displayWidth/2,
             this.cameras.main.height - mainMenuText.displayHeight - margin,
         );
-
+        */
         // start playing music
         // this.music = this.sound.add('bg-music', {loop: true, volume: 1});
         // this.music.play();
