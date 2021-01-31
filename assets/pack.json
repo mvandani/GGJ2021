@@ -3,13 +3,8 @@
         "files": [
             {
                 "type": "image",
-                "key": "mr-giggy",
-                "url": "assets/images/mr-giggy.png"
-            },
-            {
-                "type": "image",
-                "key": "mrs-giggy",
-                "url": "assets/images/mrs-giggy.png"
+                "key": "crib",
+                "url": "assets/images/crib.png"
             },
             {
                 "type": "image",

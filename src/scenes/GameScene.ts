@@ -52,6 +52,7 @@ export class GameScene extends Phaser.Scene {
 
     private enemies: Array<Phaser.Physics.Arcade.Image> = [];
     private kids: Array<Phaser.GameObjects.Sprite> = [];
+    private crib: Phaser.Physics.Arcade.Image;
 
     // A map of enemy Images to enemyDefinitions (see below)
     private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
@@ -203,6 +204,7 @@ export class GameScene extends Phaser.Scene {
 
         this.createKids();
         this.createEnemies();
+        this.createCrib();
         
         // Listen for events from obejcts
         this.events.addListener('event', () => {
@@ -324,6 +326,11 @@ export class GameScene extends Phaser.Scene {
             this.physics.add.collider(kid, this.gameMap.wallGroup);
             this.kids.push(kid);
         });
+    }
+
+    createCrib(): void {
+        this.crib = this.physics.add.image(500, 800, "crib");
+        this.crib.setDisplaySize(200,200);
     }
 
     updateEnemies(): void {
