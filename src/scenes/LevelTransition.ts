@@ -39,15 +39,15 @@ export class LevelTransition extends Phaser.Scene {
         const margin = 50;
 
         this.anims.create({
-            key: "cherry-left",
-            frames: this.anims.generateFrameNumbers("cherry", {start: 0, end: 7}),
+            key: "cherry-walk",
+            frames: this.anims.generateFrameNumbers("cherry-walk", {start: 0, end: 6}),
             frameRate: 24,
             repeat: -1,
         });
 
         let left = this.physics.add.sprite((this.cameras.main.width / 2), (this.cameras.main.height / 4) - 68 + margin, "cherry");
         left.setDisplaySize(200,136);
-        left.play("cherry-left");
+        left.play("cherry-walk");
 
         const winText = this.add.text(0,0,
             'You Did It!',

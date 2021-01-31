@@ -59,12 +59,12 @@ export class GameScene extends Phaser.Scene {
 
     private gameMap:GameMap;
 
-    private enemies: Array<Phaser.Physics.Arcade.Image> = [];
+    private enemies: Array<Phaser.Physics.Arcade.Sprite> = [];
     private kids: Array<Phaser.GameObjects.Sprite> = [];
     private crib: Phaser.Physics.Arcade.Image;
 
     // A map of enemy Images to enemyDefinitions (see below)
-    private enemiesToDefintions: Map<Phaser.Physics.Arcade.Image, any> = new Map();
+    private enemiesToDefintions: Map<Phaser.Physics.Arcade.Sprite, any> = new Map();
     
     private levelConfig: Object;
 
@@ -73,42 +73,48 @@ export class GameScene extends Phaser.Scene {
     // - Its update function, which is called each frame
     private enemyDefinitions: Object = {
         [EnemyTypes.DUMB_DANGER_NOODLE]: {
-            assetType: "snake-01",
+            assetType: "snake-03",
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Anytime a dumb danger noodle cannot move in any direction or if it reaches
                 // a location divisible by 50, it chooses a new direction to move in randomly.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
                     const rando = Math.random();
                     if(rando < .25) {
                         e.setVelocityX(-300);
                         e.setVelocityY(0);
+                        e.setRotation(-Math.PI/2);
                     } else if(rando < .5) {
                         e.setVelocityX(300);
                         e.setVelocityY(0);
+                        e.setRotation(Math.PI/2);
                     } else if(rando < .75) {
                         e.setVelocityX(0);
                         e.setVelocityY(-300);
+                        e.setRotation(0);
                     } else {
                         e.setVelocityX(0);
                         e.setVelocityY(300);
+                        e.setRotation(Math.PI);
                     }
                 }
             }
         },
         [EnemyTypes.SMART_SNEK]: {
-            assetType: "snake-02",
+            assetType: "snake-04",
             update: (e: Phaser.Physics.Arcade.Image) => {
                 // Smart sneks move toward p1 in either the x or y dimension (randomly decided) if they
                 // cannot move any further in their current direction or if they reach a location divisble
                 // by 50.
-                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 50 === 0 || Math.floor(e.y) % 50 === 0)) {
+                if((e.body.deltaX() === 0 && e.body.deltaY() === 0) || (Math.floor(e.x) % 100 === 0 || Math.floor(e.y) % 100 === 0)) {
                     if(Math.random() > .5) {
                         e.setVelocityY(0);
                         const dx = e.x - this.p1.x;
                         if(dx < 0) {
                             e.setVelocityX(300);
+                            e.setRotation(Math.PI/2);
                         } else if(dx > 0) {
                             e.setVelocityX(-300);
+                            e.setRotation(-Math.PI/2);
                         } else {
                             e.setVelocityX(0);
                         }
@@ -117,8 +123,10 @@ export class GameScene extends Phaser.Scene {
                         const dy = e.y - this.p1.y;
                         if(dy < 0) {
                             e.setVelocityY(300);
+                            e.setRotation(Math.PI);
                         } else if(dy > 0) {
                             e.setVelocityY(-300);
+                            e.setRotation(0);
                         } else {
                             e.setVelocityY(0);
                         }
@@ -186,37 +194,60 @@ export class GameScene extends Phaser.Scene {
         this.gameMap = new GameMap(this,0,0,this.level);
 
         this.anims.create({
-            key: "cherry-left",
-            frames: this.anims.generateFrameNumbers("cherry", {start: 0, end: 7}),
+            key: "cherry-idle",
+            frames: this.anims.generateFrameNumbers("cherry-idle", {start: 0, end: 1}),
+            frameRate: 12,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "cherry-walk",
+            frames: this.anims.generateFrameNumbers("cherry-walk", {start: 0, end: 6}),
             frameRate: 24,
             repeat: -1,
         });
-        const left = this.anims.create({
-            key: "golden-left",
-            frames: this.anims.generateFrameNumbers("golden", {start: 0, end: 7}),
+        this.anims.create({
+            key: "golden-idle",
+            frames: this.anims.generateFrameNumbers("golden-walk", {start: 0, end: 1}),
+            frameRate: 12,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "golden-walk",
+            frames: this.anims.generateFrameNumbers("golden-walk", {start: 0, end: 6}),
             frameRate: 24,
             repeat: -1,
         });
+        this.anims.create({
+            key: "snake-03",
+            frames: this.anims.generateFrameNumbers("snake-03", {start: 0, end: 10}),
+            frameRate: 24,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: "snake-04",
+            frames: this.anims.generateFrameNumbers("snake-04", {start: 0, end: 10}),
+            frameRate: 24,
+            repeat: -1,
+        })
 
         const p1Start = this.levelConfig["player1"]["start"];
         const p2Start = this.levelConfig["player2"]["start"];
-        this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 12, p1Start[1] * 100 + 25, "cherry");
-        this.p1.setOrigin(0, 0);
-        this.p1.play("cherry-left");
-        this.p1.setBounce(10);
+        this.p1 = this.physics.add.sprite(p1Start[0] * 100 + 50, p1Start[1] * 100 + 50, "cherry");
+        this.p1.play("cherry-walk");
         
-        this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 12, p2Start[1] * 100 + 25, "golden");
-        this.p2.setOrigin(0, 0);
-        this.p2.play("golden-left");
-        this.p2.setBounce(0.5);
-
+        this.p2 = this.physics.add.sprite(p2Start[0] * 100 + 50, p2Start[1] * 100 + 50, "golden");
+        this.p2.play("golden-walk");
         
 
         //this.p1 = this.physics.add.image(300, 600, 'mr-giggy');
         this.p1.setDisplaySize(75,51);
+        this.p1.setSize(75, 51);
+        this.p2.refreshBody();
 
         //this.p2 = this.physics.add.image(700, 600, 'mrs-giggy');
         this.p2.setDisplaySize(75,51);
+        this.p2.setSize(75, 51);
+        this.p2.refreshBody();
 
 
         this.physics.add.collider(this.p1, this.gameMap.wallGroup);
@@ -228,9 +259,9 @@ export class GameScene extends Phaser.Scene {
 
         [this.p1, this.p2].forEach(p => p.setCollideWorldBounds(true));
 
+        this.createCrib();
         this.createKids();
         this.createEnemies();
-        this.createCrib();
         
         // Listen for events from obejcts
         this.events.addListener('event', () => {
@@ -314,20 +345,20 @@ export class GameScene extends Phaser.Scene {
     createEnemies(): void {
         const enemyTypes = [
             EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.DUMB_DANGER_NOODLE,
-            EnemyTypes.SMART_SNEK,
             EnemyTypes.SMART_SNEK,
         ];
 
-        enemyTypes.forEach(enemyType => {
+        this.levelConfig["snakes"].forEach(snake => {
             // Get the definition for this type of enemy
-            const eDefinition = this.enemyDefinitions[enemyType];
+            const eDefinition = this.enemyDefinitions[enemyTypes[snake['type']]];
 
-            const e = this.physics.add.image(0,0, eDefinition.assetType);
-            e.setDisplaySize(50,50);
+            const e = this.physics.add.sprite(snake['start'][0] * 100 + 50, snake['start'][1] * 100 + 50, eDefinition.assetType);
+            e.setDisplaySize(60,100);
             e.setCollideWorldBounds(true);
             this.physics.add.collider(e, this.gameMap.wallGroup);
+            e.play(eDefinition.assetType);
+            e.setSize(90,90);
+            e.refreshBody();
             this.enemies.push(e);
 
             // Pair the enemy object with its definition
@@ -344,8 +375,8 @@ export class GameScene extends Phaser.Scene {
         this.levelConfig["kids"].forEach(kidConfig => {
             const kid = new Kid({
                 scene: this,
-                x: kidConfig['start'][0] * 100 + 25,
-                y: kidConfig['start'][1] * 100 + 25,
+                x: kidConfig['start'][0] * 100 + 50,
+                y: kidConfig['start'][1] * 100 + 50,
                 key: 'kid',
                 behaviorCode: kidConfig['behavior']
             });
@@ -359,8 +390,7 @@ export class GameScene extends Phaser.Scene {
 
     createCrib(): void {
         const cribStart = this.levelConfig["crib"]["start"];
-        this.crib = this.physics.add.image(cribStart[0] * 100, cribStart[1] * 100, "crib");
-        this.crib.setOrigin(0, 0);
+        this.crib = this.physics.add.image(cribStart[0] * 100 + 50, cribStart[1] * 100 + 50, "crib");
         this.crib.setDisplaySize(100, 100);
     }
 
