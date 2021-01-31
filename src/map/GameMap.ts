@@ -21,13 +21,16 @@ export class GameMap extends Phaser.GameObjects.Container {
 
     private tileGroup: Phaser.GameObjects.Group;
 
+    private mapKey: string;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, isBuilding: boolean = false) {
+
+    constructor(scene: Phaser.Scene, x: number, y: number, mapKey:string, isBuilding: boolean = false) {
 
         // all rooms shall use this
         super(scene, x, y, []);
         //this.children = [];
 
+        this.mapKey = mapKey;
         this.isBuilding = isBuilding;
 
         //this.setSize(300, 200);
@@ -37,6 +40,7 @@ export class GameMap extends Phaser.GameObjects.Container {
         this.wallGroup = this.scene.physics.add.staticGroup();
         this.loadTiles();
         //this.loadWalls();
+
     }
 
     update(): void {
@@ -125,7 +129,7 @@ export class GameMap extends Phaser.GameObjects.Container {
                 gameMap.createTileWalls(this, tileConfig);
             } else {
                 // If not setting walls, we're cycling through images
-                let keys = ['vl1', 'vl2', 'vr1', 'vr2', 'vs', 'nw1', 'nw2', 'blank'];
+                let keys = ['vl1', 'vl2', 'vr1', 'vr2', 'vs', 'L', 'U', 'h', 'h2', 'nw1', 'nw2', 'blank'];
                 tileConfig.i=  keys[(keys.indexOf((this as any).texture.key) + 1) % keys.length];
                 (this as any).setTexture(tileConfig.i);
                 this.setDisplaySize(gameMap.TILE_SIZE, gameMap.TILE_SIZE);
@@ -147,8 +151,7 @@ export class GameMap extends Phaser.GameObjects.Container {
 
     loadTiles() {
         this.tileGroup = this.scene.add.group();
-        let conifigKey = this.isBuilding ? 'newMap' : 'tiles';
-        let tilesConfig = this.scene.cache.json.get(conifigKey);
+        let tilesConfig = this.scene.cache.json.get(this.mapKey);
         if (tilesConfig.tiles) {
             this.tiles = tilesConfig.tiles.map((row, rowIndex) => this.layTileRow(row, rowIndex));
         } else {

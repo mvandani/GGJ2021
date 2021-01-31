@@ -73,6 +73,26 @@
             },
             {
                 "type": "image",
+                "key": "h",
+                "url": "assets/images/horizontal.png"
+            },
+            {
+                "type": "image",
+                "key": "h2",
+                "url": "assets/images/horizontal2.png"
+            },
+            {
+                "type": "image",
+                "key": "L",
+                "url": "assets/images/L.png"
+            },
+            {
+                "type": "image",
+                "key": "U",
+                "url": "assets/images/U.png"
+            },
+            {
+                "type": "image",
                 "key": "nw1",
                 "url": "assets/images/nowalls1.png"
             },

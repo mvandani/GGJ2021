@@ -144,7 +144,7 @@ export class GameScene extends Phaser.Scene {
 
     create(): void {
 
-        this.gameMap = new GameMap(this,0,0);
+        this.gameMap = new GameMap(this,0,0,'level1');
 
         this.anims.create({
             key: "cherry-left",
