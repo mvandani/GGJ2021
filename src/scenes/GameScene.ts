@@ -457,7 +457,7 @@ export class GameScene extends Phaser.Scene {
                     to: 1,
                 },
                 duration: 100,
-                repeat: 1,
+                repeat: 2,
                 yoyo: true,
                 onComplete: () => {
                     player.alpha = 1;
@@ -603,6 +603,12 @@ export class GameScene extends Phaser.Scene {
                     ));
                 }
             })
+        }
+
+        if(this.isCoolingDown(this.p1)) {
+            console.log("cooling down");
+        } else {
+            console.log("-")
         }
 
         if(this.isCoolingDown(this.p1)) {
